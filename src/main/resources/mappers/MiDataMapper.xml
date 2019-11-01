@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chanlun.yx.data.dao.MiDataMapper">
+  <resultMap id="BaseResultMap" type="com.chanlun.yx.data.model.MiData">
+    <result column="index" jdbcType="BIGINT" property="index" />
+    <result column="open" jdbcType="DOUBLE" property="open" />
+    <result column="high" jdbcType="DOUBLE" property="high" />
+    <result column="low" jdbcType="DOUBLE" property="low" />
+    <result column="close" jdbcType="DOUBLE" property="close" />
+    <result column="volume" jdbcType="BIGINT" property="volume" />
+    <result column="amount" jdbcType="DOUBLE" property="amount" />
+    <result column="adjustflag" jdbcType="INTEGER" property="adjustflag" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.chanlun.yx.data.model.MiDataWithBLOBs">
+    <result column="code" jdbcType="LONGVARCHAR" property="code" />
+    <result column="date" jdbcType="LONGVARCHAR" property="date" />
+    <result column="time" jdbcType="LONGVARCHAR" property="time" />
+  </resultMap>
+  <sql id="Blob_Column_List">
+    code, date, time,open,high,low,close,volume,amount
+  </sql>
+  <insert id="insert" parameterType="com.chanlun.yx.data.model.MiDataWithBLOBs">
+    insert into t_mi_data (index, open, high, 
+      low, close, volume, amount, 
+      adjustflag, code, date, 
+      time)
+    values (#{index,jdbcType=BIGINT}, #{open,jdbcType=DOUBLE}, #{high,jdbcType=DOUBLE}, 
+      #{low,jdbcType=DOUBLE}, #{close,jdbcType=DOUBLE}, #{volume,jdbcType=BIGINT}, #{amount,jdbcType=DOUBLE}, 
+      #{adjustflag,jdbcType=INTEGER}, #{code,jdbcType=LONGVARCHAR}, #{date,jdbcType=LONGVARCHAR}, 
+      #{time,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chanlun.yx.data.model.MiDataWithBLOBs">
+    insert into t_mi_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="index != null">
+        index,
+      </if>
+      <if test="open != null">
+        open,
+      </if>
+      <if test="high != null">
+        high,
+      </if>
+      <if test="low != null">
+        low,
+      </if>
+      <if test="close != null">
+        close,
+      </if>
+      <if test="volume != null">
+        volume,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="adjustflag != null">
+        adjustflag,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="index != null">
+        #{index,jdbcType=BIGINT},
+      </if>
+      <if test="open != null">
+        #{open,jdbcType=DOUBLE},
+      </if>
+      <if test="high != null">
+        #{high,jdbcType=DOUBLE},
+      </if>
+      <if test="low != null">
+        #{low,jdbcType=DOUBLE},
+      </if>
+      <if test="close != null">
+        #{close,jdbcType=DOUBLE},
+      </if>
+      <if test="volume != null">
+        #{volume,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="adjustflag != null">
+        #{adjustflag,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id = "queryAllByCode" parameterType="java.lang.String" resultMap = "ResultMapWithBLOBs">
+  	
+  	select <include refid="Blob_Column_List" /> from t_mi_data t where t.code = #{code,jdbcType=LONGVARCHAR} order by t.date
+  
+  </select>
+  
+</mapper>
