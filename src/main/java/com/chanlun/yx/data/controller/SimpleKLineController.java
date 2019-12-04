@@ -65,7 +65,7 @@ public class SimpleKLineController {
 		} catch (Exception e) {
 			System.err.println("read errors :" + e);
 		}
-		records = KLineUtils.simpleKLine(records);
+		records = KLineUtils.handleKLine(records);
 
 		// 打印最高值，最低值
 		double higthv = records.get(0).getHigh();
@@ -103,7 +103,7 @@ public class SimpleKLineController {
 			simpleRecord.add(sRecord);
 
 		}
-		System.out.println(BiLineUtils.contructBiLine(simpleRecord));
+//		System.out.println(BiLineUtils.handleBiLine(simpleRecord));
 		return listos.toString();
 
 	}
@@ -204,7 +204,7 @@ public class SimpleKLineController {
 		}
 
 		
-		records = KLineUtils.simpleKLine(records);
+		records = KLineUtils.handleKLine(records);
 
 		// 打印最高值，最低值
 		List<List<Object>> listos = new ArrayList<List<Object>>();

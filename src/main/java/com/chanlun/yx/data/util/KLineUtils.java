@@ -7,7 +7,11 @@ import com.chanlun.yx.data.dto.HistoryRecord;
 
 public class KLineUtils {
 
-	// 比较两个k先是否包含关系
+	/**
+	 * @param recordA
+	 * @param recordB
+	 * @return 若recordA包含或等于recordB则返回 1，若recordB包含recordA则返回-1 互不包含则返回0
+	 */
 	public static int isContains(HistoryRecord recordA, HistoryRecord recordB) {
 		if (recordA.getLow() <= recordB.getLow() && recordA.getHigh() >= recordB.getHigh()) {
 			return 1;
@@ -18,71 +22,66 @@ public class KLineUtils {
 		return 0;
 	}
 
-	// 合并K线
+	/**
+	 * 合并需要遵从【从左往右原则】合并【方向右之前两根合并处理过的柱子的方向决定】，保证前后两者不具有包含关系
+	 * 第一个柱子与第二个如果有包含关系，则直接合并为最长的那根为第一根。
+	 * 
+	 * @param before
+	 *            recordA 之前那根
+	 * @param recordA
+	 *            可能需要合并的第一根
+	 * @param recordB
+	 *            可能需要合并的第二根
+	 * @return 如果 recordA recordB 需要合并，则返回合并后的 值，如果不需要合并则返回null
+	 */
 	public static HistoryRecord merge(HistoryRecord before, HistoryRecord recordA, HistoryRecord recordB) {
-		if(before !=null && before.getTime().equals("2013/3/8") && before.getOpen() ==2314.59){
-			System.out.println();
-		}
-			
+
 		HistoryRecord record = new HistoryRecord();
+
+		// 不存在包含关系，无需合并
 		if (isContains(recordA, recordB) == 0) {
-			return null;// 不是孕线不能合并
+			return null;
 		}
-		double hight = 0.0;
-		if (recordA.getHigh() >= recordB.getHigh()) {
 
-			hight = recordA.getHigh();
+		// before ==null 说明recordA recordB 为前两根柱子，在这里还有包含关系
+		if (before == null) {
+			// 直接取最长的
+			record.setStartTime(recordA.getStartTime());
+			record.setEndTime(recordB.getEndTime());
+			record.setHigh(maxHight(recordA, recordB));
+			record.setLow(minLow(recordA, recordB));
+			record.setVolume(recordA.getVolume() + recordB.getVolume());
+			return record;
+		}
+
+		// before 不为 null 说明recordA recordB 不是起始两根 且有包含关系
+		// [recordA 与 before必然没包含关系，高点或则低点也绝不会对齐]
+		if (recordA.getHigh() > before.getHigh()) {
+			// 方向向上【取最高的高点为合并高点，取最高的低点为合并低点】
+			record.setStartTime(recordA.getStartTime());
+			record.setEndTime(recordB.getEndTime());
+			record.setHigh(maxHight(recordA, recordB));
+			record.setLow(maxLow(recordA, recordB));
+			record.setVolume(recordA.getVolume() + recordB.getVolume());
 		} else {
-			hight = recordB.getHigh();
+			// 方向向下【取最低的低点为合并低点，取最底的高点为合并高点】
+			record.setStartTime(recordA.getStartTime());
+			record.setEndTime(recordB.getEndTime());
+			record.setHigh(minHight(recordA, recordB));
+			record.setLow(minLow(recordA, recordB));
+			record.setVolume(recordA.getVolume() + recordB.getVolume());
 		}
-		double low = 0.0;
-		if (recordA.getLow() <= recordB.getLow()) {
-
-			low = recordA.getLow();
-		} else {
-			low = recordB.getLow();
-		}
-
-		if (before != null) {
-
-			if (recordA.getHigh() > before.getHigh()) {//上升k
-				record.setHigh(hight);
-				if (recordA.getLow() >= recordB.getLow()) {
-					record.setLow(recordA.getLow());
-				} else {
-					record.setLow(recordB.getLow());
-				}
-			} else {//下跌k
-				record.setLow(low);
-				if (recordA.getHigh() >= recordB.getHigh()) {
-					record.setHigh(recordB.getHigh());
-				} else {
-					record.setHigh(recordA.getHigh());
-				}
-			}
-			record.setPriceChange(recordB.getClose() - before.getClose());
-			record.setpChange((recordB.getClose() - before.getClose()) / before.getClose());
-		} else {
-			record.setHigh(hight);
-			record.setLow(low);
-			record.setPriceChange(0.0);
-			record.setpChange(0.0);
-		}
-		
-		if(record.getHigh()==0){
-			System.out.println("111");
-		}
-		record.setOpen(recordA.getOpen());
-		record.setClose(recordB.getClose());
-		record.setStartTime(recordA.getStartTime());
-		record.setEndTime(recordB.getEndTime());
-		record.setTime(recordA.getTime());
-		record.setVolume(recordA.getVolume() + recordB.getVolume());
 
 		return record;
 	}
 
-	// 相邻个是否有包含关系
+	/**
+	 * 检查是否还具有包含关系
+	 * 
+	 * @param list
+	 *            是否还具有包含关系
+	 * @return 返回true 不具有包含关系【处理完成后的K】 返回false 仍然需要处理合并
+	 */
 	public static boolean checkContains(List<HistoryRecord> list) {
 
 		if (list.size() < 2) {
@@ -100,42 +99,136 @@ public class KLineUtils {
 			}
 			return true;
 		}
-
 	}
 
-	public static List<HistoryRecord> simpleKLine(List<HistoryRecord> list) {
+	/**
+	 * 柱子简化处理
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public static List<HistoryRecord> handleKLine(List<HistoryRecord> list) {
+
+		// 检查是否处理完成，处理完成就返回
 		if (KLineUtils.checkContains(list)) {
 			return list;
 		}
 		List<HistoryRecord> simpleList = new ArrayList<HistoryRecord>();
-		simpleList.add(list.get(0));
-		int i = 1;
-		while (true) {
-			if (i > list.size() - 1) {
-				break;
-			}
-			if (KLineUtils.isContains(simpleList.get(simpleList.size() - 1), list.get(i)) == 0) {
-				simpleList.add(list.get(i));
-				i++;
-			} else {
-				HistoryRecord newRecord = null;
-				if (simpleList.size() > 1) {
-					
-					newRecord = KLineUtils.merge(simpleList.get(simpleList.size() - 2),
-							simpleList.get(simpleList.size() - 1), list.get(i));
-					simpleList.remove(simpleList.size()-1);
-					simpleList.add(newRecord);
-					i++;
-				} else {
-					newRecord = KLineUtils.merge(null, simpleList.get(simpleList.size() - 1), list.get(i));
-					simpleList.remove(simpleList.size()-1);
-					simpleList.add(newRecord);
-					i++;
+		HistoryRecord tempRecord = list.get(0);
+		HistoryRecord before = null;
+		for (int i = 0; i < list.size() - 1; i++) {
+			
+			HistoryRecord mergeRecord = merge(before, tempRecord, list.get(i + 1));
+			if (mergeRecord == null) {// 无需合并，第k个柱子可以确认
+				simpleList.add(copyProperties(tempRecord));
+				
+				if(simpleList.size()==13){
+					System.out.println(11);
 				}
+				
+				before = copyProperties(tempRecord);
+				tempRecord = list.get(i + 1);
+				if (i == list.size() - 2) {
+					// 倒数两根无包含关系
+					simpleList.add(copyProperties(list.get(i + 1)));
+					break;// finish
+				}
+			} else {
+				if (i == list.size() - 2) {
+					// 倒数两根无包含关系
+					simpleList.add(copyProperties(mergeRecord));
+					break;// finish
+				}
+				tempRecord = copyProperties(mergeRecord);
 			}
 		}
-		//
-		return simpleKLine(simpleList);
-//		return simpleList;
+		return simpleList;
+	}
+
+	// 获取最高点
+	private static double maxHight(HistoryRecord recordA, HistoryRecord recordB) {
+
+		if (recordA.getHigh() > recordB.getHigh()) {
+			return recordA.getHigh();
+		} else {
+
+			return recordB.getHigh();
+		}
+
+	}
+
+	// 获取最大的低点高点
+	private static double maxLow(HistoryRecord recordA, HistoryRecord recordB) {
+
+		if (recordA.getLow() > recordB.getLow()) {
+			return recordA.getLow();
+		} else {
+
+			return recordB.getLow();
+		}
+
+	}
+
+	// 获取最小的高点
+	private static double minHight(HistoryRecord recordA, HistoryRecord recordB) {
+
+		if (recordA.getHigh() < recordB.getHigh()) {
+			return recordA.getHigh();
+		} else {
+
+			return recordB.getHigh();
+		}
+	}
+
+	// 获取最低点
+	private static double minLow(HistoryRecord recordA, HistoryRecord recordB) {
+		if (recordA.getLow() < recordB.getLow()) {
+			return recordA.getLow();
+		} else {
+			return recordB.getLow();
+		}
+	}
+
+
+	private static HistoryRecord copyProperties(HistoryRecord orgRecord) {
+		HistoryRecord decRecord = new HistoryRecord();
+		decRecord.setLow(orgRecord.getLow());
+		decRecord.setHigh(orgRecord.getHigh());
+		decRecord.setVolume(orgRecord.getVolume());
+		decRecord.setStartTime(orgRecord.getStartTime());
+		decRecord.setEndTime(orgRecord.getEndTime());
+		return decRecord;
+	}
+	
+	public static void main(String[] args) {
+		List<HistoryRecord> records = new ArrayList<HistoryRecord>();
+		HistoryRecord recordA = new HistoryRecord();
+		HistoryRecord recordB = new HistoryRecord();
+		HistoryRecord recordC = new HistoryRecord();
+		HistoryRecord recordD = new HistoryRecord();
+		HistoryRecord recordE = new HistoryRecord();
+		
+		recordA.setHigh(2);
+		recordA.setLow(1);
+		recordB.setHigh(3);
+		recordB.setLow(0.5);
+		recordC.setHigh(4);
+		recordC.setLow(0.3);
+		recordD.setHigh(1.5);
+		recordD.setLow(0.1);
+		recordE.setHigh(4);
+		recordE.setLow(0.01);
+		
+		records.add(recordC);
+		records.add(recordB);
+		records.add(recordA);
+		records.add(recordD);
+		records.add(recordE);
+//		records.add(recordA);
+//		records.add(recordB);
+//		records.add(recordC);
+//		records.add(recordD);
+		
+		System.out.println(handleKLine(records));
 	}
 }
