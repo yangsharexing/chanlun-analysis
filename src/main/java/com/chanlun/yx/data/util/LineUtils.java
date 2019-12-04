@@ -62,7 +62,7 @@ public class LineUtils {
 						tempLow = biLines.get(i + 1);
 
 						if (kiLines.size() > 3) {
-
+  
 							int netStart = haseUpLine(kiLines, kiLines, biLines, i, finish);
 							if (netStart != 0) {
 								start = netStart;
