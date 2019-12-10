@@ -36,5 +36,5 @@ public class Point {
 	public String toString() {
 		return "Point [time=" + time + ", price=" + price + ", type=" + type + "]";
 	}
-
+	
 }
