@@ -242,7 +242,7 @@ public class ZhongShuUtils {
 			return point2.getPrice();
 		}
 	}
-
+ 
 	private static double max(Point... points) {
 
 		double max = points[0].getPrice();
