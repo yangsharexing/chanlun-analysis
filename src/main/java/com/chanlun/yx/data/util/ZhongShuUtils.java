@@ -17,6 +17,11 @@ public class ZhongShuUtils {
 
 	public static void findZhongShu(List<Point> points, List<ZhongShu> zhList)
 			throws IllegalAccessException, InvocationTargetException {
+		
+		if (points.size() < 4) {
+			throw new ZSException(ExceptionCode.DATAERROR);
+		}
+		
 		int tempIndex = 0;
 		ZhongShu tempZhongshu = null;
 		Line tempLine = null;
@@ -27,15 +32,27 @@ public class ZhongShuUtils {
 		List<TrendType> zoushiList = new ArrayList<TrendType>();
 
 		while (true) {
-			if (points.size() < 4) {
-
-				throw new ZSException(ExceptionCode.DATAERROR);
-				
-			}
+			
 			if (tempZhongshu == null) {
 				// 连续三段重叠即可确认中枢
+				
+				if(tempIndex + 2>points.size()-1) {
+					
+					//结束，最后一个点当作离开中枢最后一点
+					if(zoushiList.size()>0) {
+						
+						lastLine = (Line) zoushiList.get(zoushiList.size()-1);
+						lastLine.setEndPoint(points.get(points.size()-1));
+						break;
+						
+					}else {
+						//一个确认的中枢没找到就没数据了，直接推出即可
+						break;
+					}
+				}
 				tempZhongshu = hasOverLap(points.get(tempIndex), points.get(tempIndex + 1), points.get(tempIndex + 2),
 						points.get(tempIndex + 3));
+				
 				tempIndex = tempIndex + 4;
 				continue;
 			}
