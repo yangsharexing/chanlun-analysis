@@ -251,7 +251,7 @@ public class ZhongShuUtils {
 			max = p.getPrice() > max ? p.getPrice() : max;
 		}
 
-		return max;
+		return max;  
 
 	}
 
