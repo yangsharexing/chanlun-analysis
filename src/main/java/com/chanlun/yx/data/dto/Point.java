@@ -7,6 +7,17 @@ public class Point {
 	private double price;
 
 	private int type;// 1 髙点 0 低点
+	
+	public Point() {
+		super();
+	}
+
+	public Point(String time, double price, int type) {
+		super();
+		this.time = time;
+		this.price = price;
+		this.type = type;
+	}
 
 	public String getTime() {
 		return time;

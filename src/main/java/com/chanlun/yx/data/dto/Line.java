@@ -1,20 +1,29 @@
 package com.chanlun.yx.data.dto;
 
-public class Line extends TrendType{
+public class Line extends TrendType {
 
 	private Point startPoint;
-   
+
 	private Point endPoint;
-	
-	
+
+	private int num;
+
 	public Line() {
 		super();
 	}
-	
+
 	public Line(Point startPoint, Point endPoint) {
 		super();
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
+	}
+
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
 	}
 
 	public Point getStartPoint() {
@@ -35,7 +44,7 @@ public class Line extends TrendType{
 
 	@Override
 	public String toString() {
-		return "Line [startPoint=" + startPoint + ", endPoint=" + endPoint + "]";
+		return "Line [startPoint=" + startPoint + ", endPoint=" + endPoint + ", num=" + num + "]";
 	}
 
 }
