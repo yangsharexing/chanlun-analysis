@@ -17,11 +17,11 @@ public class ZhongShuUtils {
 
 	public static void findZhongShu(List<Point> points, List<ZhongShu> zhList)
 			throws IllegalAccessException, InvocationTargetException {
-		
+
 		if (points.size() < 4) {
 			throw new ZSException(ExceptionCode.DATAERROR);
 		}
-		
+
 		int tempIndex = 0;
 		ZhongShu tempZhongshu = null;
 		Line tempLine = null;
@@ -32,43 +32,74 @@ public class ZhongShuUtils {
 		List<TrendType> zoushiList = new ArrayList<TrendType>();
 
 		while (true) {
-			
+
 			if (tempZhongshu == null) {
 				// 连续三段重叠即可确认中枢
-				
-				if(tempIndex + 2>points.size()-1) {
-					
-					//结束，最后一个点当作离开中枢最后一点
-					if(zoushiList.size()>0) {
-						
-						lastLine = (Line) zoushiList.get(zoushiList.size()-1);
-						lastLine.setEndPoint(points.get(points.size()-1));
+
+				if (tempIndex + 3 > points.size() - 1) {
+
+					// 结束，最后一个点当作离开中枢最后一点
+					if (zoushiList.size() > 0) {
+
+						lastLine = (Line) zoushiList.get(zoushiList.size() - 1);
+						lastLine.setEndPoint(points.get(points.size() - 1));
 						break;
-						
-					}else {
-						//一个确认的中枢没找到就没数据了，直接推出即可
+
+					} else {
+						// 一个确认的中枢没找到就没数据了，直接推出即可
 						break;
 					}
 				}
 				tempZhongshu = hasOverLap(points.get(tempIndex), points.get(tempIndex + 1), points.get(tempIndex + 2),
 						points.get(tempIndex + 3));
-				
-				tempIndex = tempIndex + 4;
-				continue;
+
+				if (tempIndex + 4 > points.size() - 1) {
+
+					if (tempZhongshu != null) {
+
+						// 整个走势以中枢结束，中枢后面并没有线段
+						zoushiList.add(tempZhongshu);
+						break;
+					} else {
+						// 结束，最后一个点当作离开中枢最后一点
+						lastLine = (Line) zoushiList.get(zoushiList.size() - 1);
+						lastLine.setEndPoint(points.get(points.size() - 1));
+						break;
+					}
+				} else {
+					if (tempZhongshu == null){
+						
+						
+						
+						
+						tempIndex = tempIndex + 4;
+						continue;
+						
+					}else{
+						
+						tempIndex = tempIndex + 4;
+						continue;
+					}
+				}
 			}
 
+			Point currentPoint = points.get(tempIndex);
 			double currentPrice = points.get(tempIndex).getPrice();
 			if (currentPrice <= tempZhongshu.getGg() && currentPrice >= tempZhongshu.getDd()) {
 				// 下一笔的终点在中枢的波动区间内
 				tempZhongshu.setNum(tempZhongshu.getNum() + 1);
+				tempZhongshu.setEndTime(currentPoint.getTime());
+				
+				if(tempIndex + 1 > points.size()-1 ){
+					//没有更多的点来轮询，就此打住，最后一个中枢放入走势链
+					
+					zoushiList.add(tempZhongshu);
+					break;
+				}
+				
+				//否则继续轮询
 				tempIndex = tempIndex + 1;
 				continue;
-			}
-
-			if (tempIndex + 1 >= points.size()) {
-				// 笔画不够，当做最后一个点
-				// DOTO
-
 			}
 
 			if (currentPrice > tempZhongshu.getGg()) {
@@ -78,10 +109,9 @@ public class ZhongShuUtils {
 					if (currentPrice >= lastZhongshu.getDd()) {
 
 						// 产生波动区间的重叠 中枢升级，化为盘整
-
 						// 1 移除原理的中枢 和最后一段
-						ZhongShu preZhongshu = (ZhongShu) zoushiList.remove(zoushiList.size() - 1);
 						Line preLine = (Line) zoushiList.remove(zoushiList.size() - 1);
+						ZhongShu preZhongshu = (ZhongShu) zoushiList.remove(zoushiList.size() - 1);
 
 						if (zoushiList.size() > 0) {// 原来还有中枢
 							lastZhongshu = (ZhongShu) zoushiList.get(zoushiList.size() - 2);
@@ -91,7 +121,7 @@ public class ZhongShuUtils {
 							lastLine = null;
 						}
 
-//						合并原来的中枢;
+						// 合并原来的中枢;
 						preZhongshu.setGg(max(preZhongshu.getGg(), tempZhongshu.getGg()));
 						preZhongshu.setDd(min(preZhongshu.getDd(), tempZhongshu.getDd()));
 						preZhongshu.setNum(preZhongshu.getNum() + tempZhongshu.getNum());
@@ -118,13 +148,18 @@ public class ZhongShuUtils {
 					// 将中枢与离开段存入集合
 					zoushiList.add(copyZhongShu(tempZhongshu));
 					zoushiList.add(copyLine(tempLine));
+					
+					lastZhongshu = copyZhongShu(tempZhongshu);
+					lastLine = copyLine(tempLine);
+					
 					tempZhongshu = null;
-//					tempIndex 保持不变
+					// tempIndex 保持不变
 					continue;
 
 				}
 
-			} else {// 由于前面已经 判断了 不属于波动区间，所以这里else 表示currentPrice<tempZhongshu.getDd();
+			} else {// 由于前面已经 判断了 不属于波动区间，所以这里else
+					// 表示currentPrice<tempZhongshu.getDd();
 					// 往下离开
 
 				if (lastLine != null && lastLine.getType() == 1) {// 前一个中枢存在，且是从上方过来的，此时向上一笔需要考虑中枢的升级
@@ -145,7 +180,7 @@ public class ZhongShuUtils {
 							lastLine = null;
 						}
 
-//						合并原来的中枢;
+						// 合并原来的中枢;
 						preZhongshu.setGg(max(preZhongshu.getGg(), tempZhongshu.getGg()));
 						preZhongshu.setDd(min(preZhongshu.getDd(), tempZhongshu.getDd()));
 						preZhongshu.setNum(preZhongshu.getNum() + tempZhongshu.getNum());
@@ -173,9 +208,11 @@ public class ZhongShuUtils {
 					// 将中枢与离开段存入集合
 					zoushiList.add(copyZhongShu(tempZhongshu));
 					zoushiList.add(copyLine(tempLine));
+					lastZhongshu = copyZhongShu(tempZhongshu);
+					lastLine = copyLine(tempLine);
 
 					tempZhongshu = null;
-//					tempIndex 保持不变
+					// tempIndex 保持不变
 					continue;
 				}
 			}
@@ -217,7 +254,11 @@ public class ZhongShuUtils {
 			zhongshu.setDd(min(point1, point2, point3, point4));
 			zhongshu.setZg(zg(point1, point2, point3, point4));
 			zhongshu.setZg(zd(point1, point2, point3, point4));
-
+			zhongshu.setNum(3);
+			zhongshu.setLevel(1);
+			zhongshu.setStartTime(point1.getTime());
+			zhongshu.setEndTime(point3.getTime());
+			zhongshu.setType(1);
 			return zhongshu;
 		}
 
@@ -242,7 +283,7 @@ public class ZhongShuUtils {
 			return point2.getPrice();
 		}
 	}
- 
+
 	private static double max(Point... points) {
 
 		double max = points[0].getPrice();
@@ -251,7 +292,7 @@ public class ZhongShuUtils {
 			max = p.getPrice() > max ? p.getPrice() : max;
 		}
 
-		return max;  
+		return max;
 
 	}
 
