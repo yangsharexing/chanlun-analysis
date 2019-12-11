@@ -221,7 +221,8 @@ public class SimpleKLineController {
 		}
 		
 		System.out.println("数据大小 = "+records.size());
-		List<Point> points = BiLineUtils.contructBiLine(simpleRecord);
+		List<Point> points = null;
+//		List<Point> points = BiLineUtils.contructBiLine(simpleRecord);
 
 		for (Point point : points) {
 
