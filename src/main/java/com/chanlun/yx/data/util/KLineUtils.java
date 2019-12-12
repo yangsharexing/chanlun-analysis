@@ -122,10 +122,6 @@ public class KLineUtils {
 			if (mergeRecord == null) {// 无需合并，第k个柱子可以确认
 				simpleList.add(copyProperties(tempRecord));
 				
-				if(simpleList.size()==13){
-					System.out.println(11);
-				}
-				
 				before = copyProperties(tempRecord);
 				tempRecord = list.get(i + 1);
 				if (i == list.size() - 2) {
