@@ -67,7 +67,8 @@ public class ZhongShuUtils {
 			throws IllegalAccessException, InvocationTargetException {
 
 		if (points.size() < 4) {
-			throw new ZSException(ExceptionCode.DATAERROR);
+//			throw new ZSException(ExceptionCode.DATAERROR);
+			return null;
 		}
 
 		int tempIndex = 0;
@@ -133,13 +134,33 @@ public class ZhongShuUtils {
 						} else {
 							// 不存在中枢的情况下，出现连续3段没有重复，前面的线段忽略
 							tempIndex = tempIndex + 2;
+							
+						}
+						if(tempIndex >points.size()-1) {
+							break;
 						}
 						continue;
 					} else {
 						tempIndex = tempIndex + 4;
+						if(tempIndex >points.size()-1) {
+							break;
+						}
 						continue;
 					}
 				}
+			}
+			
+			//FIXME
+			if(tempIndex + 1 >points.size()-1) {
+				
+				//下一笔到头了
+				// 没有更多的点来轮询，就此打住，最后一个中枢放入走势链
+				zoushiList.add(tempZhongshu);
+				break;
+				
+			}
+			if(tempIndex >points.size()-1) {
+				break;
 			}
 			Point currentPoint = points.get(tempIndex);
 			double currentPrice = points.get(tempIndex).getPrice();
@@ -161,6 +182,9 @@ public class ZhongShuUtils {
 
 				// 否则继续轮询
 				tempIndex = tempIndex + 1;
+				if(tempIndex >points.size()-1) {
+					break;
+				}
 				continue;
 			}
 
@@ -193,16 +217,22 @@ public class ZhongShuUtils {
 						tempZhongshu = copyZhongShu(preZhongshu);
 						tempLine = copyLine(tempLine);
 						tempIndex = tempIndex + 1;
+						if(tempIndex >points.size()-1) {
+							break;
+						}
 						continue;
 					}
 				}
-
+				
 				// 往上离开
 				if (points.get(tempIndex + 1).getPrice() < tempZhongshu.getGg()) {
 					// 回调段回到中枢波动区间，中枢扩张
 					tempZhongshu.setNum(tempZhongshu.getNum() + 1);
 					tempZhongshu.setGg(currentPrice);
 					tempIndex = tempIndex + 1;
+					if(tempIndex >points.size()-1) {
+						break;
+					}
 					continue;
 				} else {
 					// 回调段回到没有回到中枢 中枢完成
@@ -221,6 +251,9 @@ public class ZhongShuUtils {
 
 					tempZhongshu = null;
 					// tempIndex 保持不变
+					if(tempIndex >points.size()-1) {
+						break;
+					}
 					continue;
 
 				}
@@ -257,8 +290,21 @@ public class ZhongShuUtils {
 						tempZhongshu = copyZhongShu(preZhongshu);
 						tempLine = copyLine(tempLine);
 						tempIndex = tempIndex + 1;
+						if(tempIndex >points.size()-1) {
+							break;
+						}
 						continue;
 					}
+				}
+				
+				//FIXME
+				if(tempIndex + 1 >points.size()-1) {
+					
+					//下一笔到头了
+					// 没有更多的点来轮询，就此打住，最后一个中枢放入走势链
+					zoushiList.add(tempZhongshu);
+					break;
+					
 				}
 
 				if (points.get(tempIndex + 1).getPrice() > tempZhongshu.getDd()) {
@@ -266,6 +312,9 @@ public class ZhongShuUtils {
 					tempZhongshu.setNum(tempZhongshu.getNum() + 1);
 					tempZhongshu.setDd(currentPrice);
 					tempIndex = tempIndex + 1;
+					if(tempIndex >points.size()-1) {
+						break;
+					}
 					continue;
 				} else {
 					// 回拉段回到没有回到中枢 中枢完成
@@ -285,6 +334,9 @@ public class ZhongShuUtils {
 
 					tempZhongshu = null;
 					// tempIndex 保持不变
+					if(tempIndex >points.size()-1) {
+						break;
+					}
 					continue;
 				}
 			}
