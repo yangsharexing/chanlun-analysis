@@ -17,8 +17,9 @@ public class BiLineUtils {
 		tempPoint.setType(0);
 		tempPoint.setPrice(0);
 		tempPoint.setTime("0");
-		int preBeforeIndex = -2;// 前一个分型结束的位置，由于一个分型是默认的0 当出现第一个顶分型，且满足 高于0分型，且顶分型后面出现底分型
-		
+		int preBeforeIndex = -2;// 前一个分型结束的位置，由于一个分型是默认的0 当出现第一个顶分型，且满足
+								// 高于0分型，且顶分型后面出现底分型
+
 		for (int i = 0; i < records.size() - 2; i++) {
 			if (tempPoint.getType() == 1) {
 				Point isFenXin = isFenXin(records.get(i), records.get(i + 1), records.get(i + 2));
@@ -31,12 +32,12 @@ public class BiLineUtils {
 					}
 				} else {
 					if (isFenXin.getPrice() < tempPoint.getPrice()) {// 确认
-						
+
 						// 确认分型之前，要保证两个分型之前至少有一个K线
-						if (i -preBeforeIndex >1) {
+						if (i - preBeforeIndex > 1) {
 							fenXinRecords.add(copyProperties(tempPoint));
-							
-							//加入一个节点后记录分型最后一k的位置
+
+							// 加入一个节点后记录分型最后一k的位置
 							tempPoint = copyProperties(isFenXin);
 							preBeforeIndex = i + 2;
 						}
@@ -52,10 +53,10 @@ public class BiLineUtils {
 
 					if (isFenXin.getPrice() > tempPoint.getPrice()) {// 确认
 						// 确认分型之前，要保证两个分型之前至少有一个K线
-						if (i -preBeforeIndex >1) {
+						if (i - preBeforeIndex > 1) {
 							fenXinRecords.add(copyProperties(tempPoint));
-							
-							//加入一个节点后记录分型最后一k的位置
+
+							// 加入一个节点后记录分型最后一k的位置
 							preBeforeIndex = i + 2;
 							tempPoint = copyProperties(isFenXin);
 						}
@@ -98,6 +99,8 @@ public class BiLineUtils {
 		} else {
 			fenXinRecords.add(copyProperties(tempPoint));
 		}
+		
+		fenXinRecords.remove(0);//移除第一点 默认第一笔向下【因为第一笔在构成线段之后，极有可能成为第一个中枢的DD，这个就很严重了】
 		return fenXinRecords;
 	}
 
@@ -134,7 +137,7 @@ public class BiLineUtils {
 	}
 
 	public static void main(String[] args) {
-		
+
 		List<HistoryRecord> records = new ArrayList<HistoryRecord>();
 		HistoryRecord record1 = new HistoryRecord();
 		HistoryRecord record2 = new HistoryRecord();
@@ -144,13 +147,13 @@ public class BiLineUtils {
 		HistoryRecord record6 = new HistoryRecord();
 		HistoryRecord record7 = new HistoryRecord();
 		HistoryRecord record8 = new HistoryRecord();
-		
+
 		HistoryRecord record11 = new HistoryRecord();
 		HistoryRecord record12 = new HistoryRecord();
 		HistoryRecord record13 = new HistoryRecord();
 		HistoryRecord record14 = new HistoryRecord();
 		HistoryRecord record15 = new HistoryRecord();
-		
+
 		record1.setHigh(3);
 		record1.setLow(1);
 		record2.setHigh(4);
@@ -167,7 +170,7 @@ public class BiLineUtils {
 		record7.setLow(0.1);
 		record8.setHigh(2);
 		record8.setLow(0.5);
-		
+
 		record11.setHigh(3);
 		record11.setLow(1);
 		record12.setHigh(4);
@@ -178,7 +181,7 @@ public class BiLineUtils {
 		record14.setLow(2);
 		record15.setHigh(3);
 		record15.setLow(1);
-		
+
 		records.add(record1);
 		records.add(record2);
 		records.add(record3);
@@ -187,14 +190,14 @@ public class BiLineUtils {
 		records.add(record6);
 		records.add(record7);
 		records.add(record8);
-		
+
 		records.add(record11);
 		records.add(record12);
 		records.add(record13);
 		records.add(record14);
 		records.add(record15);
-		
+
 		System.out.println(contructBiLines(records));
-		
+
 	}
 }

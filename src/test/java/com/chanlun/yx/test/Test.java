@@ -36,37 +36,26 @@ public class Test {
 			List<Point> point2 = LineUtils.bi2Line(point);
 //			System.out.println("线段点为" + point2.size());
 
-			List<TrendType> trList = ZhongShuUtils.findZhongShu(point2);
 			
-			if(trList==null) {
-				continue;
-			}
-			
-//			System.out.println("总共"+codes.size()+" 第"+i);
-			i= i+1;
-			if (trList.size() > 4) {
-				writeFile(code+"具有中枢月走势类型"+trList.size() );
-				System.out.println(trList);
-			}
 		}
 
 	}
 
-	public static void writeFile(String text) {
-		  try {
-	            File writeName = new File("C:\\output.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
-	            writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
-	            try (FileWriter writer = new FileWriter(writeName,true);
-	                 BufferedWriter out = new BufferedWriter(writer)
-	            ) {
-	                out.write(text); // \r\n即为换行
-	                out.write("\r\n");
-	                out.flush(); // 把缓存区内容压入文件
-	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-		
-	}
+//	public static void writeFile(String text) {
+//		  try {
+//	            File writeName = new File("C:\\output.txt"); // 相对路径，如果没有则要建立一个新的output.txt文件
+//	            writeName.createNewFile(); // 创建新文件,有同名的文件的话直接覆盖
+//	            try (FileWriter writer = new FileWriter(writeName,true);
+//	                 BufferedWriter out = new BufferedWriter(writer)
+//	            ) {
+//	                out.write(text); // \r\n即为换行
+//	                out.write("\r\n");
+//	                out.flush(); // 把缓存区内容压入文件
+//	            }
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//		
+//	}
 
 }

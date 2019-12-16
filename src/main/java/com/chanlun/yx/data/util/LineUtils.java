@@ -139,11 +139,15 @@ public class LineUtils {
 	private static int handup(List<Point> Lines, List<Point> biLines, int start) {
 
 		if (Lines.size() == 0) {
-			// 默认第一个点为
+			// 默认第一个点在  biLines 第一点和第二点之间
 			Point point = new Point();
 			point.setTime("0");
-			point.setPrice(0);
-			point.setType(0);
+			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2);
+			if(biLines.get(1).getPrice()>biLines.get(2).getPrice()){
+				point.setType(0);
+			}else{
+				point.setType(1);
+			}
 			Lines.add(point);
 		}
 		BiDesc temptzStart = null;
