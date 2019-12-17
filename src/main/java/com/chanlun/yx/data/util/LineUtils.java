@@ -142,7 +142,7 @@ public class LineUtils {
 			// 默认第一个点在  biLines 第一点和第二点之间
 			Point point = new Point();
 			point.setTime("0");
-			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2);
+			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2.0);
 			if(biLines.get(1).getPrice()>biLines.get(2).getPrice()){
 				point.setType(0);
 			}else{

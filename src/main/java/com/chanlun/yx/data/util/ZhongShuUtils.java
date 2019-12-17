@@ -17,57 +17,11 @@ import com.chanlun.yx.data.dto.ZhongShu;
 
 public class ZhongShuUtils {
 
-	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
-
-		List<Point> points = new ArrayList<Point>();
-		Point p1 = new Point("1", 0, 0);
-		Point p2 = new Point("2", 2, 1);
-		Point p3 = new Point("3", 1, 0);
-		Point p4 = new Point("4", 3, 1);
-		Point p5 = new Point("5", 1, 0);
-
-		Point p6 = new Point("6", 6, 1);
-		Point p7 = new Point("7", 5, 0);
-		Point p8 = new Point("8", 6.5, 1);
-		Point p9 = new Point("9", 4, 0);
-		Point p10 = new Point("10", 10, 1);
-		Point p11 = new Point("11", 8, 0);
-		Point p12 = new Point("12", 11, 1);
-		Point p13 = new Point("13", 7, 0);
-		Point p14 = new Point("14", 14, 1);
-		Point p15 = new Point("15", 5, 0);
-		Point p16 = new Point("16", 8, 1);
-
-		points.add(p1);
-		points.add(p2);
-		points.add(p3);
-		points.add(p4);
-		points.add(p5);
-		points.add(p6);
-		points.add(p7);
-		points.add(p8);
-		points.add(p9);
-		points.add(p10);
-		points.add(p11);
-		points.add(p12);
-		points.add(p13);
-		points.add(p14);
-		points.add(p15);
-		points.add(p16);
-
-		List<TrendType> list = findZhongShu(points);
-		for (TrendType ten : list) {
-
-			System.out.println(ten);
-		}
-
-	}
-
 	public static List<TrendType> findZhongShu(List<Point> points)
 			throws IllegalAccessException, InvocationTargetException {
 
 		if (points.size() < 4) {
-//			throw new ZSException(ExceptionCode.DATAERROR);
+			// throw new ZSException(ExceptionCode.DATAERROR);
 			return null;
 		}
 
@@ -134,32 +88,32 @@ public class ZhongShuUtils {
 						} else {
 							// 不存在中枢的情况下，出现连续3段没有重复，前面的线段忽略
 							tempIndex = tempIndex + 2;
-							
+
 						}
-						if(tempIndex >points.size()-1) {
+						if (tempIndex > points.size() - 1) {
 							break;
 						}
 						continue;
 					} else {
 						tempIndex = tempIndex + 4;
-						if(tempIndex >points.size()-1) {
+						if (tempIndex > points.size() - 1) {
 							break;
 						}
 						continue;
 					}
 				}
 			}
-			
-			//FIXME
-			if(tempIndex + 1 >points.size()-1) {
-				
-				//下一笔到头了
+
+			// FIXME
+			if (tempIndex + 1 > points.size() - 1) {
+
+				// 下一笔到头了
 				// 没有更多的点来轮询，就此打住，最后一个中枢放入走势链
 				zoushiList.add(tempZhongshu);
 				break;
-				
+
 			}
-			if(tempIndex >points.size()-1) {
+			if (tempIndex > points.size() - 1) {
 				break;
 			}
 			Point currentPoint = points.get(tempIndex);
@@ -167,11 +121,11 @@ public class ZhongShuUtils {
 			if (currentPrice <= tempZhongshu.getGg() && currentPrice >= tempZhongshu.getDd()) {
 				// 下一笔的终点在中枢的波动区间内
 				tempZhongshu.setNum(tempZhongshu.getNum() + 1);
-//				if(tempZhongshu.getNum()==9){ //中枢暂时不升级
-//					
-//					tempZhongshu.set
-//					
-//				}
+				// if(tempZhongshu.getNum()==9){ //中枢暂时不升级
+				//
+				// tempZhongshu.set
+				//
+				// }
 				tempZhongshu.setEndTime(currentPoint.getTime());
 
 				if (tempIndex + 1 > points.size() - 1) {
@@ -182,7 +136,7 @@ public class ZhongShuUtils {
 
 				// 否则继续轮询
 				tempIndex = tempIndex + 1;
-				if(tempIndex >points.size()-1) {
+				if (tempIndex > points.size() - 1) {
 					break;
 				}
 				continue;
@@ -217,20 +171,20 @@ public class ZhongShuUtils {
 						tempZhongshu = copyZhongShu(preZhongshu);
 						tempLine = copyLine(tempLine);
 						tempIndex = tempIndex + 1;
-						if(tempIndex >points.size()-1) {
+						if (tempIndex > points.size() - 1) {
 							break;
 						}
 						continue;
 					}
 				}
-				
+
 				// 往上离开
 				if (points.get(tempIndex + 1).getPrice() < tempZhongshu.getGg()) {
 					// 回调段回到中枢波动区间，中枢扩张
 					tempZhongshu.setNum(tempZhongshu.getNum() + 1);
 					tempZhongshu.setGg(currentPrice);
 					tempIndex = tempIndex + 1;
-					if(tempIndex >points.size()-1) {
+					if (tempIndex > points.size() - 1) {
 						break;
 					}
 					continue;
@@ -251,7 +205,7 @@ public class ZhongShuUtils {
 
 					tempZhongshu = null;
 					// tempIndex 保持不变
-					if(tempIndex >points.size()-1) {
+					if (tempIndex > points.size() - 1) {
 						break;
 					}
 					continue;
@@ -290,21 +244,21 @@ public class ZhongShuUtils {
 						tempZhongshu = copyZhongShu(preZhongshu);
 						tempLine = copyLine(tempLine);
 						tempIndex = tempIndex + 1;
-						if(tempIndex >points.size()-1) {
+						if (tempIndex > points.size() - 1) {
 							break;
 						}
 						continue;
 					}
 				}
-				
-				//FIXME
-				if(tempIndex + 1 >points.size()-1) {
-					
-					//下一笔到头了
+
+				// FIXME
+				if (tempIndex + 1 > points.size() - 1) {
+
+					// 下一笔到头了
 					// 没有更多的点来轮询，就此打住，最后一个中枢放入走势链
 					zoushiList.add(tempZhongshu);
 					break;
-					
+
 				}
 
 				if (points.get(tempIndex + 1).getPrice() > tempZhongshu.getDd()) {
@@ -312,7 +266,7 @@ public class ZhongShuUtils {
 					tempZhongshu.setNum(tempZhongshu.getNum() + 1);
 					tempZhongshu.setDd(currentPrice);
 					tempIndex = tempIndex + 1;
-					if(tempIndex >points.size()-1) {
+					if (tempIndex > points.size() - 1) {
 						break;
 					}
 					continue;
@@ -334,7 +288,7 @@ public class ZhongShuUtils {
 
 					tempZhongshu = null;
 					// tempIndex 保持不变
-					if(tempIndex >points.size()-1) {
+					if (tempIndex > points.size() - 1) {
 						break;
 					}
 					continue;
@@ -401,7 +355,7 @@ public class ZhongShuUtils {
 
 	private static double zg(Point point1, Point point2, Point point3, Point point4) {
 
-//		double max = max(point1,point2,point3,point4);
+		// double max = max(point1,point2,point3,point4);
 		return 1;
 
 	}
