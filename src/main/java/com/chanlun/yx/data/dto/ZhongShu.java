@@ -1,5 +1,7 @@
 package com.chanlun.yx.data.dto;
 
+import java.util.List;
+
 /**
  * 中枢
  */
@@ -23,6 +25,7 @@ public class ZhongShu extends TrendType{
 	//中枢的段数
 	private int num;
 	
+	List<Line> lines;
 	
 	//中枢开始时间
 	private String startTime;
@@ -106,11 +109,21 @@ public class ZhongShu extends TrendType{
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	
+
+	public List<Line> getLines() {
+		return lines;
+	}
+
+	public void setLines(List<Line> lines) {
+		this.lines = lines;
+	}
 
 	@Override
 	public String toString() {
 		return "ZhongShu [zg=" + zg + ", zd=" + zd + ", gg=" + gg + ", dd=" + dd + ", level=" + level + ", num=" + num
-				+ ", startTime=" + startTime + ", endTime=" + endTime + ", leaveLine=" + leaveLine + "]";
+				+ ", lines=" + lines + ", startTime=" + startTime + ", endTime=" + endTime + ", leaveLine=" + leaveLine
+				+ "]";
 	}
 
 }
