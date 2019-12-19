@@ -14,25 +14,21 @@ public class BeiChiUtils {
 	}
 
 	public static LineFeature computV(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
-
 		LineFeature feature = new LineFeature();
 		boolean flag = false;
 		int sumKnum = 0;
 		double sumVol = 0;
 		for (int i = 0; i < list.size(); i++) {
-
 			if (list.get(i).getTime().equals(line.getStartPoint().getTime())) {
 
 				flag = true;
 			}
 			if (flag) {
-
 				if (list.get(i).getHigh() < lowPrice) {
 
 					sumKnum = 0;
 					sumVol = 0;
 				}
-
 				if (list.get(i).getHigh() >= hightPrice) {
 					// 第一次达到目的
 					break;
