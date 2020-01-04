@@ -5,12 +5,20 @@ import java.util.List;
 
 import com.chanlun.yx.data.dto.HistoryRecord;
 
+/**
+ * K线合并原理
+ * 
+ * 步骤：
+ *  1、首先确认前两个K是否存在包含关系,如果存在则合并后高点为 max(g1,g2) 低点为min(d1,d2) 如此下去,直至前两个K没有包含关系
+ *  2、从左往右如果发现两个K有包含关系,那么需要确认前一个K与这两个有包含关系的第一个K的关系是向上还是向下
+ *    如果向上,那么合并高点为max(g1,g2) 低点为max(d1,d2) 如果向下,高点为民(g1,g2)低点为 min(d1,d2)
+ */
 public class KLineUtils {
 
 	/**
 	 * @param recordA
 	 * @param recordB
-	 * @return 若recordA包含或等于recordB则返回 1，若recordB包含recordA则返回-1 互不包含则返回0
+	 * @return 若recordA包含或等于recordB则返回 1,若recordB包含recordA则返回-1 互不包含则返回0
 	 */
 	public static int isContains(HistoryRecord recordA, HistoryRecord recordB) {
 		if (recordA.getLow() <= recordB.getLow() && recordA.getHigh() >= recordB.getHigh()) {
@@ -23,8 +31,8 @@ public class KLineUtils {
 	}
 
 	/**
-	 * 合并需要遵从【从左往右原则】合并【方向右之前两根合并处理过的柱子的方向决定】，保证前后两者不具有包含关系
-	 * 第一个柱子与第二个如果有包含关系，则直接合并为最长的那根为第一根。
+	 * 合并需要遵从【从左往右原则】合并【方向右之前两根合并处理过的柱子的方向决定】,保证前后两者不具有包含关系
+	 * 第一个柱子与第二个如果有包含关系,则直接合并为最长的那根为第一根。
 	 * 
 	 * @param before
 	 *            recordA 之前那根
@@ -32,18 +40,18 @@ public class KLineUtils {
 	 *            可能需要合并的第一根
 	 * @param recordB
 	 *            可能需要合并的第二根
-	 * @return 如果 recordA recordB 需要合并，则返回合并后的 值，如果不需要合并则返回null
+	 * @return 如果 recordA recordB 需要合并,则返回合并后的 值,如果不需要合并则返回null
 	 */
 	public static HistoryRecord merge(HistoryRecord before, HistoryRecord recordA, HistoryRecord recordB) {
 
 		HistoryRecord record = new HistoryRecord();
 
-		// 不存在包含关系，无需合并
+		// 不存在包含关系,无需合并
 		if (isContains(recordA, recordB) == 0) {
 			return null;
 		}
 
-		// before ==null 说明recordA recordB 为前两根柱子，在这里还有包含关系
+		// before ==null 说明recordA recordB 为前两根柱子,在这里还有包含关系
 		if (before == null) {
 			// 直接取最长的
 			record.setStartTime(recordA.getStartTime());
@@ -55,16 +63,16 @@ public class KLineUtils {
 		}
 
 		// before 不为 null 说明recordA recordB 不是起始两根 且有包含关系
-		// [recordA 与 before必然没包含关系，高点或则低点也绝不会对齐]
+		// [recordA 与 before必然没包含关系,高点或则低点也绝不会对齐]
 		if (recordA.getHigh() > before.getHigh()) {
-			// 方向向上【取最高的高点为合并高点，取最高的低点为合并低点】
+			// 方向向上【取最高的高点为合并高点,取最高的低点为合并低点】
 			record.setStartTime(recordA.getStartTime());
 			record.setEndTime(recordB.getEndTime());
 			record.setHigh(maxHight(recordA, recordB));
 			record.setLow(maxLow(recordA, recordB));
 			record.setVolume(recordA.getVolume() + recordB.getVolume());
 		} else {
-			// 方向向下【取最低的低点为合并低点，取最底的高点为合并高点】
+			// 方向向下【取最低的低点为合并低点,取最底的高点为合并高点】
 			record.setStartTime(recordA.getStartTime());
 			record.setEndTime(recordB.getEndTime());
 			record.setHigh(minHight(recordA, recordB));
@@ -109,7 +117,7 @@ public class KLineUtils {
 	 */
 	public static List<HistoryRecord> handleKLine(List<HistoryRecord> list) {
 
-		// 检查是否处理完成，处理完成就返回
+		// 检查是否处理完成,处理完成就返回
 		if (KLineUtils.checkContains(list)) {
 			return list;
 		}
@@ -119,7 +127,7 @@ public class KLineUtils {
 		for (int i = 0; i < list.size() - 1; i++) {
 			
 			HistoryRecord mergeRecord = merge(before, tempRecord, list.get(i + 1));
-			if (mergeRecord == null) {// 无需合并，第k个柱子可以确认
+			if (mergeRecord == null) {// 无需合并,第k个柱子可以确认
 				simpleList.add(copyProperties(tempRecord));
 				
 				before = copyProperties(tempRecord);

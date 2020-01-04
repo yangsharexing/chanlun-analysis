@@ -24,7 +24,7 @@ def getCode():
 def downLoadDayData(code,redis,startTime,endTime,freq):
     lg = bs.login()
     rs = bs.query_history_k_data_plus(code,
-        "date,time,code,open,high,low,close,volume,amount,adjustflag",
+        "date,code,open,high,low,close,volume,amount,adjustflag,turn,pctChg",
         start_date=startTime, end_date=endTime,
         frequency=freq, adjustflag="2")#
     print('query_history_k_data_plus respond error_code:'+rs.error_code)
@@ -34,7 +34,6 @@ def downLoadDayData(code,redis,startTime,endTime,freq):
     while (rs.error_code == '0') & rs.next():
         data_list.append(rs.get_row_data())
     result = pd.DataFrame(data_list, columns=rs.fields)
-    
     if  len(data_list)<1:
         print(code+"没有数据")
         return 
@@ -43,7 +42,7 @@ def downLoadDayData(code,redis,startTime,endTime,freq):
     redis.set(code, result.to_msgpack(compress='zlib'))
     dd= {col:result[col].tolist() for col in result.columns}
     str_json=json.dumps(dd,indent=1, ensure_ascii=False)
-    redis.setnx('java.'+code, str_json)    
+    redis.setnx('day.java.'+code, str_json)    
     print("入redis完成")
     bs.logout()
 
@@ -54,6 +53,6 @@ sum=1;
 for i in range(len(codeList)):
     print(codeList[i])
     print(codeList[i][0])
-    downLoadDayData(codeList[i][0],redis,"2019-06-01","2019-12-12","5")
+    downLoadDayData(codeList[i][0],redis,"2019-09-01","2019-12-12","d")
     sum = sum+1
     print("第几个============"+str(sum))

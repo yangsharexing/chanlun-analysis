@@ -7,115 +7,14 @@ import java.util.List;
 import com.chanlun.yx.data.dto.BiDesc;
 import com.chanlun.yx.data.dto.Point;
 
-//笔转线段
+/**
+ * 
+ * 
+ * 
+ *
+ */
 public class LineUtils {
 	
-//	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
-//		
-//		
-//		List<Point> biLines  = new ArrayList<Point>();
-//		Point p1 = new Point("1", 1, 0, 1000);
-//		Point p2 = new Point("2", 3, 1, 1000);
-//		Point p3 = new Point("3", 1.2, 0, 1000);
-//		
-//		Point pa = new Point("a", 2, 1, 1000);
-//		Point pb = new Point("a", 1.5, 0, 1000);
-//		
-//		Point p4 = new Point("4", 2.5, 1, 1000);
-//		Point p5 = new Point("5", 1, 0, 1000);
-//		Point p6 = new Point("6", 4, 1, 1000);
-//		Point p7 = new Point("7", 1.5, 0, 1000);
-//		Point p8 = new Point("8", 2.5, 1, 1000);
-//		Point p9 = new Point("9", 1, 0, 1000);
-//		
-//		biLines.add(p1);
-//		biLines.add(p2);
-//		biLines.add(p3);
-//		biLines.add(p4);
-//		biLines.add(p5);
-//		biLines.add(p6);
-//		biLines.add(p7);
-//		biLines.add(p8);
-//		biLines.add(p9);
-//		
-//		
-//		
-//		System.out.println(bi2Line(biLines));
-//	}
-//	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
-//		
-//		
-//		List<Point> biLines  = new ArrayList<Point>();
-//		Point p1 = new Point("1", 1, 0, 1000);
-//		Point p2 = new Point("2", 3, 1, 1000);
-//		Point p3 = new Point("3", 1.5, 0, 1000);
-//		Point p4 = new Point("4", 2.5, 1, 1000);
-//		Point p5 = new Point("5", 1, 0, 1000);
-//		Point p6 = new Point("6", 4, 1, 1000);
-//		Point p7 = new Point("7", 1.5, 0, 1000);
-//		Point p8 = new Point("8", 2.5, 1, 1000);
-//		Point p9 = new Point("9", 1, 0, 1000);
-//		
-//		biLines.add(p1);
-//		biLines.add(p2);
-//		biLines.add(p3);
-//		biLines.add(p4);
-//		biLines.add(p5);
-//		biLines.add(p6);
-//		biLines.add(p7);
-//		biLines.add(p8);
-//		biLines.add(p9);
-//		
-//		
-//		
-//		System.out.println(bi2Line(biLines));
-//	}
-//	
-//	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
-//		
-//		
-//		List<Point> biLines  = new ArrayList<Point>();
-//		Point p1 = new Point("1", 1, 0, 1000);
-//		Point p2 = new Point("2", 2.4, 1, 1000);
-//		Point p3 = new Point("3", 2, 0, 1000);
-//		Point p4 = new Point("4", 4, 1, 1000);
-//		Point p5 = new Point("5", 2.5, 0, 1000);
-//		Point p6 = new Point("6", 3.5, 1, 1000);
-//		Point p7 = new Point("7", 3, 0, 1000);
-//		Point p8 = new Point("8", 3.5, 1, 1000);
-//		Point p9 = new Point("9", 2, 0, 1000);
-//		Point p10 = new Point("10", 3, 1, 1000);
-//		
-//		
-//		Point p11 = new Point("11", 0.2, 0, 1000);
-//		Point p12 = new Point("12", 1, 1, 1000);
-//		Point p13 = new Point("13", 0.5, 0, 1000);
-//		Point p14 = new Point("14", 2, 1, 1000);
-//		Point p15 = new Point("14", 0.6, 0, 1000);
-//		Point p16 = new Point("14", 1, 1, 1000);
-//		
-//		
-//		biLines.add(p1);
-//		biLines.add(p2);
-//		biLines.add(p3);
-//		biLines.add(p4);
-//		biLines.add(p5);
-//		biLines.add(p6);
-//		biLines.add(p7);
-//		biLines.add(p8);
-//		biLines.add(p9);
-//		biLines.add(p10);
-//		biLines.add(p11);
-//		biLines.add(p12);
-//		biLines.add(p13);
-//		biLines.add(p14);
-//		biLines.add(p15);
-//		biLines.add(p16);
-//		
-//		
-//		System.out.println(bi2Line(biLines));
-//	}
-
 	public static List<Point> bi2Line(List<Point> biLines) throws IllegalAccessException, InvocationTargetException {
 
 		List<Point> lines = new ArrayList<Point>();
@@ -126,9 +25,9 @@ public class LineUtils {
 			if (count == -1) {
 				break;
 			}
-			count = handup(lines, biLines, count);
+			count = handDown(lines, biLines, count);
 			if (count != -1) {
-				count = handDown(lines, biLines, count);
+				count = handup(lines, biLines, count);
 			}
 
 		}

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.chanlun.yx.data.dto.AllHistoryRecord;
 import com.chanlun.yx.data.dto.HistoryRecord;
 import com.chanlun.yx.data.util.DataFrame2List;
 
@@ -31,6 +32,12 @@ public class RedisUtils {
 		init();
 		String dataFrame = jedis.get(code);
 		return DataFrame2List.json2List(dataFrame);
+	}
+	
+	public static List<AllHistoryRecord> fetchDayData(String code) {
+		init();
+		String dataFrame = jedis.get(code);
+		return DataFrame2List.json2DayList(dataFrame);
 	}
 
 	public static List<String> getAllKeys() {

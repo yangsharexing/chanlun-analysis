@@ -5,7 +5,40 @@ import java.util.List;
 
 import com.chanlun.yx.data.dto.HistoryRecord;
 import com.chanlun.yx.data.dto.Point;
-
+/**
+ * 初始化：
+ * 默认第一个为确认的底分型，第一笔不唯一，今后划分线段的时候第一段尽量不要作为买入依据
+ *                                    	       （后高于前） 更新分析高点信息
+ *                                         |
+ * 						  (顶)---顶与顶比高 ----|
+ * 						  |                |
+ *  					  |               （后低于前） 不处理	 
+ *   					  |
+ * 			（顶）--(下一个)--				  （底高于顶） 不处理
+ * 			|             |               |
+ *			| 		      |				  |
+ *			|             (底)---底是否低于顶 --|
+ *			|							  |								（相隔少于一个K） 不处理
+ *			|							  |								|
+ *			|							  （底低于顶）---两个是否相隔至少一个K线-----|
+ *			|															|
+ *			| 															（相隔知道包含一个K） 确认顶分型，当前分型变成该地点的底分型
+ *			|
+ * 当前分型--- |
+ * 			|			  (顶)	同理
+ * 			|			  |
+ * 			|			  |
+ * 		    |			  |
+ * 			（底）--(下一个)-->
+ * 						  |
+ * 						  |
+ * 						  |
+ * 						  （底）      同理
+ * 
+ * 
+ * 分型后去掉第一笔
+ *
+ */
 public class BiLineUtils {
 
 	public static List<Point> contructBiLines(List<HistoryRecord> records) {

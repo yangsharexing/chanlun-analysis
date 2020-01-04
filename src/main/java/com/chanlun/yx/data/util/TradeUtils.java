@@ -178,12 +178,12 @@ public class TradeUtils {
 						
 						//在相应的离开幅度后是否出现背驰
 						if((record.getHigh()  - zhongshu.getGg())/record.getHigh()>0.03){
-							
-							if(BeiChiUtils.isBeichi(lastLine, lastLine2, lists)){
-								//背驰卖出
-							}else{
-								buydto.setHistorys(list);
-							}
+//							@FIXME
+//							if(BeiChiUtils.isBeichi(lastLine, lastLine2, lists)){
+//								//背驰卖出
+//							}else{
+//								buydto.setHistorys(list);
+//							}
 						}
 					}else{
 						buydto.setHistorys(list);

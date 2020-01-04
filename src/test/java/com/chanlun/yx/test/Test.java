@@ -23,7 +23,7 @@ public class Test {
 		List<String> codes = RedisUtils.getAllKeys();
 		int i= 1;
 		for (String code : codes) {
-
+			
 			List<HistoryRecord> list = RedisUtils.fetchData(code);
 //			System.out.println("原始k线" + list.size());
 
@@ -35,7 +35,6 @@ public class Test {
 
 			List<Point> point2 = LineUtils.bi2Line(point);
 //			System.out.println("线段点为" + point2.size());
-
 			
 		}
 
