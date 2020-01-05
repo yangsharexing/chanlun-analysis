@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chanlun.yx.data.dao.MonitorMapper">
+	<resultMap id="BaseResultMap"
+		type="com.chanlun.yx.data.model.Monitor">
+		<result column="id" jdbcType="BIGINT" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="buy_price" jdbcType="DOUBLE"
+			property="buyPrice" />
+		<result column="buy_time" jdbcType="TIMESTAMP"
+			property="buyTime" />
+		<result column="buy_reason" jdbcType="VARCHAR"
+			property="buyReason" />
+		<result column="sale_price" jdbcType="DOUBLE"
+			property="salePrice" />
+		<result column="sale_time" jdbcType="TIMESTAMP"
+			property="saleTime" />
+		<result column="sale_reason" jdbcType="VARCHAR"
+			property="saleReason" />
+		<result column="monitor" jdbcType="INTEGER" property="monitor" />
+		<result column="monitor_type" jdbcType="INTEGER"
+			property="monitorType" />
+	</resultMap>
+	<insert id="insert"
+		parameterType="com.chanlun.yx.data.model.Monitor">
+		insert into t_monitor (id, code, buy_price,
+		buy_time,
+		buy_reason, sale_price,
+		sale_time, sale_reason, monitor,
+		monitor_type)
+		values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR},
+		#{buyPrice,jdbcType=DOUBLE},
+		#{buyTime,jdbcType=TIMESTAMP},
+		#{buyReason,jdbcType=VARCHAR}, #{salePrice,jdbcType=DOUBLE},
+		#{saleTime,jdbcType=TIMESTAMP}, #{saleReason,jdbcType=VARCHAR},
+		#{monitor,jdbcType=INTEGER},
+		#{monitorType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.chanlun.yx.data.model.Monitor">
+		insert into t_monitor
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="buyPrice != null">
+				buy_price,
+			</if>
+			<if test="buyTime != null">
+				buy_time,
+			</if>
+			<if test="buyReason != null">
+				buy_reason,
+			</if>
+			<if test="salePrice != null">
+				sale_price,
+			</if>
+			<if test="saleTime != null">
+				sale_time,
+			</if>
+			<if test="saleReason != null">
+				sale_reason,
+			</if>
+			<if test="monitor != null">
+				monitor,
+			</if>
+			<if test="monitorType != null">
+				monitor_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="buyPrice != null">
+				#{buyPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="buyTime != null">
+				#{buyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="buyReason != null">
+				#{buyReason,jdbcType=VARCHAR},
+			</if>
+			<if test="salePrice != null">
+				#{salePrice,jdbcType=DOUBLE},
+			</if>
+			<if test="saleTime != null">
+				#{saleTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="saleReason != null">
+				#{saleReason,jdbcType=VARCHAR},
+			</if>
+			<if test="monitor != null">
+				#{monitor,jdbcType=INTEGER},
+			</if>
+			<if test="monitorType != null">
+				#{monitorType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="countTotal" resultType="java.lang.Integer">
+		select count(1) from t_monitor
+		<where>
+			<if test="code != null">
+				and code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="monitor != null">
+				and monitor = #{monitor,jdbcType=INTEGER},
+			</if>
+			<if test="monitorType != null">
+				and monitorType = #{monitorType,jdbcType=INTEGER},
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectMonitor" resultMap="BaseResultMap">
+		select * from t_monitor
+		<where>
+			<if test="code != null">
+				and code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="monitor != null">
+				and monitor = #{monitor,jdbcType=INTEGER},
+			</if>
+			<if test="monitorType != null">
+				and monitorType = #{monitorType,jdbcType=INTEGER},
+			</if>
+		</where>
+		order by id desc limit #{start},#{end}
+	</select>
+
+
+</mapper>

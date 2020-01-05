@@ -54,7 +54,16 @@
 
 		<!-- 列出要生成代码的所有表，这里配置的是不生成Example文件 -->
 				
-		<table tableName="t_mi_data" domainObjectName="MiData"
+<!-- 		<table tableName="t_mi_data" domainObjectName="MiData"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="false" />
+			<columnOverride column="RULE_DETAILS"
+				javaType="java.lang.String" jdbcType="VARCHAR" />
+		</table> -->
+		
+			<table tableName="t_monitor" domainObjectName="Monitor"
 			enableCountByExample="false" enableUpdateByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			selectByExampleQueryId="false">

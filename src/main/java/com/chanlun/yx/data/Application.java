@@ -12,16 +12,6 @@ import org.springframework.core.env.Environment;
 
 import com.alibaba.druid.pool.DruidDataSource;
  
-//@SpringBootApplication
-//public class Application {
-//	public static void main(String[] args) {
-//		SpringApplication.run(Application.class, args);
-//		System.out.println();
-//	}
-//}
-
-
-
 @SpringBootApplication
 @MapperScan("com.chanlun.yx.data.dao")
 public class Application {

@@ -40,7 +40,7 @@ def downLoadDayData(code,redis,startTime,endTime,freq):
         return 
     print(code+"---------有数据")
     print("开始入redis")
-    redis.set(code, result.to_msgpack(compress='zlib'))
+#     redis.set(code, result.to_msgpack(compress='zlib'))
     dd= {col:result[col].tolist() for col in result.columns}
     str_json=json.dumps(dd,indent=1, ensure_ascii=False)
     redis.setnx('java.'+code, str_json)    
@@ -54,6 +54,6 @@ sum=1;
 for i in range(len(codeList)):
     print(codeList[i])
     print(codeList[i][0])
-    downLoadDayData(codeList[i][0],redis,"2019-09-01","2019-12-12","5")
+    downLoadDayData(codeList[i][0],redis,"2019-09-01","2020-01-03","5")
     sum = sum+1
     print("第几个============"+str(sum))
