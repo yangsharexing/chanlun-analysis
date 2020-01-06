@@ -69,10 +69,13 @@ public class ZhongShuUtils {
 						break;
 					} else {
 						// 结束，最后一个点当作离开中枢最后一点
-						lastLine = (Line) zoushiList.get(zoushiList.size() - 1);
-						lastLine.setEndPoint(points.get(points.size() - 1));
-						zoushiList.remove(zoushiList.size() - 1);
-						zoushiList.add(lastLine);
+						if(zoushiList.size()>0){
+							lastLine = (Line) zoushiList.get(zoushiList.size() - 1);
+							lastLine.setEndPoint(points.get(points.size() - 1));
+							zoushiList.remove(zoushiList.size() - 1);
+							zoushiList.add(lastLine);
+						}
+						
 						break;
 					}
 				} else {
@@ -418,5 +421,29 @@ public class ZhongShuUtils {
 		p.setTime(point.getTime());
 		p.setType(point.getType());
 		return p;
+	}
+	
+	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
+		
+		Point p1 = new Point("1", 2, 1);
+		Point p2 = new Point("2", 1, 0);
+		Point p3 = new Point("3", 3, 1);
+		Point p4 = new Point("4", 0.5, 0);
+		Point p5 = new Point("5", 4, 1);
+		Point p6 = new Point("6", 0.3, 0);
+		Point p7 = new Point("7", 0.4, 1);
+		
+		List<Point> points = new ArrayList<Point>();
+		points.add(p1);
+		points.add(p2);
+		points.add(p3);
+		points.add(p4);
+		points.add(p5);
+		points.add(p6);
+		points.add(p7);
+		List<TrendType> list = findZhongShu(points);
+		System.out.println(list);
+		
+		
 	}
 }

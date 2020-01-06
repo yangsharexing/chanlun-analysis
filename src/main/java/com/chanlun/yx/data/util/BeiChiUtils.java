@@ -5,14 +5,25 @@ import java.util.List;
 import com.chanlun.yx.data.dto.HistoryRecord;
 import com.chanlun.yx.data.dto.Line;
 import com.chanlun.yx.data.dto.LineFeature;
+import com.chanlun.yx.data.dto.Point;
 
 public class BeiChiUtils {
 
 	public static boolean isBeichi(Line lastLine, Line lastLine2, List<HistoryRecord> lists) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		return false;
 	}
-
+	
+	public static LineFeature computV1(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
+		
+		
+		
+		return null;
+	}
+	
 	public static LineFeature computV(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
 		LineFeature feature = new LineFeature();
 		boolean flag = false;
@@ -40,5 +51,10 @@ public class BeiChiUtils {
 		feature.setkNum(sumKnum);
 		feature.setVolume(sumVol);
 		return feature;
+	}
+
+	public static boolean isBeichi(Line sl, List<Point> point, List<HistoryRecord> list2) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
