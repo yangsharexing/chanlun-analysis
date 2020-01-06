@@ -19,6 +19,19 @@ public class BeiChiUtils {
 	
 	public static LineFeature computV1(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
 		
+		if(line.getDirect()==0) {
+			//向下
+			
+			
+			
+			
+		}else {
+			//向上
+			
+			
+			
+		}
+		
 		
 		
 		return null;
