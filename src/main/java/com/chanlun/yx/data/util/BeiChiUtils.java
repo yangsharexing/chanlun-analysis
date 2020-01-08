@@ -23,7 +23,7 @@ public class BeiChiUtils {
 			//向下
 			
 			
-			
+			 
 			
 		}else {
 			//向上

@@ -32,33 +32,65 @@ public class StockTest {
 		List<HistoryRecord> afterlist = historyList.subList(index, historyList.size());
 		boolean flag = true;
 		double buyPrice = 0;
+		int pointNum = 0;
+		int zoushiNum = 0;
+		int lastlevel = 0;
 		for (HistoryRecord record : afterlist) {
 			list.add(record);
 			if (flag) {
-				buyPrice = buy(list);
+
+				List<HistoryRecord> list2 = KLineUtils.handleKLine(list);
+				List<Point> point = BiLineUtils.contructBiLines(list2);
+				List<Point> point2 = LineUtils.bi2Line(point);
+				List<TrendType> ttlist = ZhongShuUtils.findZhongShu(point2);
+				buyPrice = buy(list, list2, point, point2, ttlist);
 
 				if (buyPrice == 0) {
 					continue;
 				}
+				zoushiNum = ttlist.size();
+				pointNum = point2.size();
+				ZhongShu lastZhongshu = (ZhongShu) ttlist.get(ttlist.size() - 1);
+				lastlevel = lastZhongshu.getLevel();
 				flag = false;
 			}
+
+			// 这里开始卖
+			List<HistoryRecord> list2 = KLineUtils.handleKLine(list);
+			List<Point> point = BiLineUtils.contructBiLines(list2);
+			List<Point> point2 = LineUtils.bi2Line(point);
+			if (point2.size() <= pointNum) {
+				continue;
+			}
+
+			List<TrendType> ttlist = ZhongShuUtils.findZhongShu(point2);
+
+			if (ttlist.size() < zoushiNum) {
+
+				continue;
+
+			}
 			
-			//这里开始卖
+			if (ttlist.size() == zoushiNum) {
+				//原来的中枢升级了
+				ZhongShu zs = null;
+				if (ttlist.get(ttlist.size() - 1) instanceof ZhongShu) {
+					zs = (ZhongShu)	ttlist.get(ttlist.size() - 1);
+				} else {
+					zs = (ZhongShu)	ttlist.get(ttlist.size() - 2);
+				}
+				
+				if()
+			}
 			
+
 
 		}
 
 	}
 
-	private static double buy(List<HistoryRecord> list) throws IllegalAccessException, InvocationTargetException {
-
-		List<HistoryRecord> list2 = KLineUtils.handleKLine(list);
-
-		List<Point> point = BiLineUtils.contructBiLines(list2);
-
-		List<Point> point2 = LineUtils.bi2Line(point);
-
-		List<TrendType> ttlist = ZhongShuUtils.findZhongShu(point2);
+	private static double buy(List<HistoryRecord> list, List<HistoryRecord> list2, List<Point> point,
+			List<Point> point2, List<TrendType> ttlist) throws IllegalAccessException, InvocationTargetException {
 
 		if (ttlist != null && ttlist.size() > 3) {
 
