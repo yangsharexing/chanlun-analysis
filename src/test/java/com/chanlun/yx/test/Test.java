@@ -120,10 +120,10 @@ public class Test {
 					
 					if(preDiff/currentPri>0.03 && afterDiff/currentPri>0.03){
 						System.out.println("2222  "+preDiff/currentPri+"  :   "+afterDiff/currentPri+"  "+code);
-						if(BeiChiUtils.isBeichi(sl, point, list2)){
-							
-						
-						}
+//						if(BeiChiUtils.isBeichi(sl, point, list2)){
+//							
+//						
+//						}
 						
 					}
 					

@@ -59,6 +59,20 @@ public class LineUtils {
 
 	// 向下笔开始
 	private static int handDown(List<Point> lines, List<Point> biLines, int start) {
+		
+		if (lines.size() == 0) {
+			// 默认第一个点在  biLines 第一点和第二点之间
+			Point point = new Point();
+			point.setTime("0");
+			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2.0);
+			if(biLines.get(1).getPrice()>biLines.get(2).getPrice()){
+				point.setType(0);
+			}else{
+				point.setType(1);
+			}
+			lines.add(point);
+		}
+		
 		BiDesc temptzStart = null;
 		// 第一个特征向量
 		temptzStart = new BiDesc(start + 1, start + 2, biLines.get(start + 1), biLines.get(start + 2), 1);

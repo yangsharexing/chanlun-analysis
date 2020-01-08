@@ -9,65 +9,94 @@ import com.chanlun.yx.data.dto.Point;
 
 public class BeiChiUtils {
 
-	public static boolean isBeichi(Line lastLine, Line lastLine2, List<HistoryRecord> lists) {
-		// TODO Auto-generated method stub
-		
-		
-		
+	public static boolean isBeichi(Line line1, Line line2, List<HistoryRecord> list) {
+		LineFeature f1 = computLine(line1, list);
+		LineFeature f2 = computLine(line2, list);
+
+		if (f1.getPriceStep() > f2.getPriceStep()*2) {
+
+			return true;
+		}
 		return false;
 	}
-	
-	public static LineFeature computV1(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
-		
-		if(line.getDirect()==0) {
-			//向下
-			
-			
-			 
-			
-		}else {
-			//向上
-			
-			
-			
+
+	public static boolean isBeichi(Line line, Point start, Point end, List<HistoryRecord> list) {
+
+		// TODO Auto-generated method stub
+		LineFeature f1 = computLine(line, list);
+		LineFeature f2 = computPoint(start, end, list);
+
+		if (f1.getPriceStep() > f2.getPriceStep()*2) {
+
+			return true;
 		}
-		
-		
-		
-		return null;
+		return false;
 	}
-	
-	public static LineFeature computV(Line line, double lowPrice, double hightPrice, List<HistoryRecord> list) {
+
+	public static LineFeature computLine(Line line, List<HistoryRecord> list) {
 		LineFeature feature = new LineFeature();
+		// 向下
+		Point startPoint = line.getStartPoint();
+		Point endPoint = line.getEndPoint();
+		int knum = 0;
+		double volume = 0;
 		boolean flag = false;
-		int sumKnum = 0;
-		double sumVol = 0;
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getTime().equals(line.getStartPoint().getTime())) {
+		for (HistoryRecord record : list) {
 
-				flag = true;
-			}
-			if (flag) {
-				if (list.get(i).getHigh() < lowPrice) {
+			if (!flag) {
 
-					sumKnum = 0;
-					sumVol = 0;
+				if (record.getEndTime().equals(startPoint.getTime())) {
+
+					flag = true;
+
 				}
-				if (list.get(i).getHigh() >= hightPrice) {
-					// 第一次达到目的
-					break;
-				}
-				sumKnum = sumKnum + 1;
-				sumVol = sumVol + list.get(i).getVolume();
+				continue;
 			}
+
+			if (record.getEndTime().endsWith(endPoint.getTime())) {
+
+				break;
+			}
+			knum = knum + 1;
+			volume = volume + record.getVolume();
 		}
-		feature.setkNum(sumKnum);
-		feature.setVolume(sumVol);
+		feature.setStartPoint(startPoint);
+		feature.setEndPoint(endPoint);
+		feature.setkNum(knum);
+		feature.setVolume(volume);
+		feature.setPriceStep(Math.abs((line.getStartPoint().getPrice() - line.getEndPoint().getPrice()) * volume));
 		return feature;
 	}
 
-	public static boolean isBeichi(Line sl, List<Point> point, List<HistoryRecord> list2) {
-		// TODO Auto-generated method stub
-		return false;
+	public static LineFeature computPoint(Point start, Point end, List<HistoryRecord> list) {
+
+		LineFeature feature = new LineFeature();
+		// 向下
+		int knum = 0;
+		double volume = 0;
+		boolean flag = false;
+		for (HistoryRecord record : list) {
+
+			if (!flag) {
+
+				if (record.getEndTime().equals(start.getTime())) {
+
+					flag = true;
+
+				}
+				continue;
+			}
+
+			if (record.getEndTime().endsWith(end.getTime())) {
+
+				break;
+			}
+			knum = knum + 1;
+			volume = volume + record.getVolume();
+		}
+		feature.setkNum(knum);
+		feature.setVolume(volume);
+		feature.setPriceStep(Math.abs((start.getPrice() - end.getPrice()) * volume));
+		return feature;
 	}
 }

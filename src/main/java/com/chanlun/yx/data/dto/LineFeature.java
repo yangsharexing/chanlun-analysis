@@ -13,6 +13,16 @@ public class LineFeature {
 	private double low;
 
 	private double hight;
+	
+	private double priceStep;
+	
+	public double getPriceStep() {
+		return priceStep;
+	}
+
+	public void setPriceStep(double priceStep) {
+		this.priceStep = priceStep;
+	}
 
 	public int getkNum() {
 		return kNum;
