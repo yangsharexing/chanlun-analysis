@@ -91,6 +91,10 @@ public class StockTest {
 						hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
 						hl.setNum(hl.getNum() + 1);
 						hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
+						if((record.getLow() - buyPrice) / buyPrice>0.002){
+							hl.setHlNum(hl.getHlNum()+1);
+						}
+						
 						System.out.println("总获利" + hl.getHl());
 						return list.size() + j;
 					}
@@ -110,6 +114,9 @@ public class StockTest {
 							hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
 							hl.setNum(hl.getNum() + 1);
 							hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
+							if((record.getLow() - buyPrice) / buyPrice>0.002){
+								hl.setHlNum(hl.getHlNum()+1);
+							}
 							System.out.println("总获利" + hl.getHl());
 							return list.size() + j;
 						}
@@ -128,6 +135,9 @@ public class StockTest {
 						hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
 						hl.setNum(hl.getNum() + 1);
 						hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
+						if((record.getLow() - buyPrice) / buyPrice>0.002){
+							hl.setHlNum(hl.getHlNum()+1);
+						}
 						System.out.println("总获利" + hl.getHl());
 						return list.size() + j;
 					}
@@ -142,6 +152,9 @@ public class StockTest {
 					hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
 					hl.setNum(hl.getNum() + 1);
 					hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
+					if((record.getLow() - buyPrice) / buyPrice>0.002){
+						hl.setHlNum(hl.getHlNum()+1);
+					}
 					System.out.println("总获利" + hl.getHl());
 					return 0;
 				}

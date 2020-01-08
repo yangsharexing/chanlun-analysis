@@ -14,7 +14,7 @@ public class TestStock {
 
 		List<String> codes = RedisUtils.getAllKeys();
 		HL hl = new HL();
-		int maxDay = 7;
+		int maxDay = 14;
 		for (String code : codes) {
 
 			if (code.contains("day")) {

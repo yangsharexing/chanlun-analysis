@@ -18,11 +18,11 @@ public class BeiChiUtils {
 			return true;
 		}
 		return false;
+//		return true;
 	}
 
 	public static boolean isBeichi(Line line, Point start, Point end, List<HistoryRecord> list) {
 
-		// TODO Auto-generated method stub
 		LineFeature f1 = computLine(line, list);
 		LineFeature f2 = computPoint(start, end, list);
 
