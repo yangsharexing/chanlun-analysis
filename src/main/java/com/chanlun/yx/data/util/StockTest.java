@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.chanlun.yx.data.dto.HL;
+import com.chanlun.yx.data.dto.HLDto;
 import com.chanlun.yx.data.dto.HistoryRecord;
 import com.chanlun.yx.data.dto.Line;
 import com.chanlun.yx.data.dto.Point;
@@ -19,7 +19,7 @@ import com.chanlun.yx.data.dto.ZhongShu;
  */
 public class StockTest {
 
-	public static int test(String code, List<HistoryRecord> historyList, int index, HL hl, int maxDay)
+	public static int test(String code, List<HistoryRecord> historyList, int index, HLDto hl, int maxDay)
 			throws IllegalAccessException, InvocationTargetException {
 
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>();
@@ -84,18 +84,6 @@ public class StockTest {
 					if (a1.getPrice() < lastZhongshu.getGg()) {
 
 						// 最后一个中枢升级（说明走势已经在原来中枢波动区间 回调了）此时就是买点 ，因为已经进入一个更大级别的中枢
-						System.out.println(code + "  " + buyTm + "买入" + buyPrice + "  " + record.getEndTime() + "卖出"
-								+ record.getLow() + "获利" + (record.getLow() - buyPrice) / buyPrice + "   index"
-								+ index);
-						System.out.println("持仓天数  --- " + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-						hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
-						hl.setNum(hl.getNum() + 1);
-						hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-						if((record.getLow() - buyPrice) / buyPrice>0.002){
-							hl.setHlNum(hl.getHlNum()+1);
-						}
-						
-						System.out.println("总获利" + hl.getHl());
 						return list.size() + j;
 					}
 
@@ -106,18 +94,6 @@ public class StockTest {
 
 						if (salelastZhongshu.getDd() > lastZhongshu.getGg()) {
 
-							System.out.println(code + "  " + buyTm + "买入" + buyPrice + "  " + record.getEndTime() + "卖出"
-									+ record.getLow() + "获利" + (record.getLow() - buyPrice) / buyPrice + "   index"
-									+ index);
-							System.out
-									.println("持仓天数  --- " + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-							hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
-							hl.setNum(hl.getNum() + 1);
-							hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-							if((record.getLow() - buyPrice) / buyPrice>0.002){
-								hl.setHlNum(hl.getHlNum()+1);
-							}
-							System.out.println("总获利" + hl.getHl());
 							return list.size() + j;
 						}
 					}
@@ -127,18 +103,6 @@ public class StockTest {
 
 					if ((record.getLow() - buyPrice) / buyPrice < 0.01) {
 
-						System.out.println(code + "  " + buyTm + "买入" + buyPrice + "  " + record.getEndTime() + "卖出"
-								+ record.getLow() + "获利" + (record.getLow() - buyPrice) / buyPrice + "   index"
-								+ index);
-						System.out.println("持仓天数（超过" + maxDay + "）  --- "
-								+ CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-						hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
-						hl.setNum(hl.getNum() + 1);
-						hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-						if((record.getLow() - buyPrice) / buyPrice>0.002){
-							hl.setHlNum(hl.getHlNum()+1);
-						}
-						System.out.println("总获利" + hl.getHl());
 						return list.size() + j;
 					}
 
@@ -146,16 +110,6 @@ public class StockTest {
 
 				if (j == afterlist.size() - 1) {
 
-					System.out.println(code + "  " + buyTm + "买入" + buyPrice + "  " + record.getEndTime() + "卖出"
-							+ record.getLow() + "获利" + (record.getLow() - buyPrice) / buyPrice + "   index" + index);
-					System.out.println("持仓天数 (到期) --- " + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-					hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) / buyPrice) * 10000);
-					hl.setNum(hl.getNum() + 1);
-					hl.setDayNum(hl.getDayNum() + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-					if((record.getLow() - buyPrice) / buyPrice>0.002){
-						hl.setHlNum(hl.getHlNum()+1);
-					}
-					System.out.println("总获利" + hl.getHl());
 					return 0;
 				}
 			}
@@ -192,19 +146,17 @@ public class StockTest {
 				ZhongShu z = (ZhongShu) ttlist.get(ttlist.size() - 2);
 				double preDiff = sl.getStartPoint().getPrice() - sl.getEndPoint().getPrice()
 						- (sl.getStartPoint().getPrice() - sez.getDd());
-				double afterDiff =Math.abs(l.getStartPoint().getPrice() - l.getEndPoint().getPrice()
-						- (l.getStartPoint().getPrice() - z.getDd())) ;
+				double afterDiff = Math.abs(l.getStartPoint().getPrice() - l.getEndPoint().getPrice()
+						- (l.getStartPoint().getPrice() - z.getDd()));
 				// 计算几个锚点
 				double price = l.getStartPoint().getPrice();
 
-				if (preDiff / price > 0.03 && afterDiff / price > 0.03) {
-						if (BeiChiUtils.isBeichi(sl, l, list2)) {
-							// 买入价格
-							double buyPrice = list.get(list.size() - 1).getHigh();
+//				if (BeiChiUtils.isBeichi(sl, l, list2, preDiff / price, afterDiff / price )) {
+					// 买入价格
+					double buyPrice = list.get(list.size() - 1).getHigh();
 
-							return buyPrice;
-						}
-				}
+					return buyPrice;
+//				}
 
 			} else {
 				ZhongShu zs = (ZhongShu) last;
@@ -226,16 +178,13 @@ public class StockTest {
 						- (sl.getStartPoint().getPrice() - sez.getDd());
 				double afterDiff = Math.abs(currentPri - zs.getDd());
 
-				if (preDiff / currentPri > 0.03 && afterDiff / currentPri > 0.03) {
-						if (BeiChiUtils.isBeichi(sl, point2.get(point2.size() - 2), point2.get(point2.size() - 1),
-								list2)) {
-							// 买入价格
-							double buyPrice = list.get(list.size() - 1).getHigh();
+//					if (BeiChiUtils.isBeichi(sl, point2.get(point2.size() - 2), point2.get(point2.size() - 1), list2,preDiff / currentPri,afterDiff / currentPri)) {
+						// 买入价格
+						double buyPrice = list.get(list.size() - 1).getHigh();
 
-							return buyPrice;
-						}
+						return buyPrice;
+//					}
 
-				}
 
 			}
 		}

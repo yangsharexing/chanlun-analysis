@@ -14,10 +14,15 @@ import com.chanlun.yx.data.dto.Point;
  *
  */
 public class LineUtils {
-	
+
 	public static List<Point> bi2Line(List<Point> biLines) throws IllegalAccessException, InvocationTargetException {
 
 		List<Point> lines = new ArrayList<Point>();
+
+		if (biLines.size() < 3) {
+			return lines;
+		}
+
 		int count = 0;
 		while (true) {
 			// 寻找第start个线段（从0开始）
@@ -38,13 +43,13 @@ public class LineUtils {
 	private static int handup(List<Point> Lines, List<Point> biLines, int start) {
 
 		if (Lines.size() == 0) {
-			// 默认第一个点在  biLines 第一点和第二点之间
+			// 默认第一个点在 biLines 第一点和第二点之间
 			Point point = new Point();
 			point.setTime("0");
-			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2.0);
-			if(biLines.get(1).getPrice()>biLines.get(2).getPrice()){
+			point.setPrice((biLines.get(1).getPrice() + biLines.get(2).getPrice()) / 2.0);
+			if (biLines.get(1).getPrice() > biLines.get(2).getPrice()) {
 				point.setType(0);
-			}else{
+			} else {
 				point.setType(1);
 			}
 			Lines.add(point);
@@ -59,20 +64,20 @@ public class LineUtils {
 
 	// 向下笔开始
 	private static int handDown(List<Point> lines, List<Point> biLines, int start) {
-		
+
 		if (lines.size() == 0) {
-			// 默认第一个点在  biLines 第一点和第二点之间
+			// 默认第一个点在 biLines 第一点和第二点之间
 			Point point = new Point();
 			point.setTime("0");
-			point.setPrice((biLines.get(1).getPrice()+biLines.get(2).getPrice())/2.0);
-			if(biLines.get(1).getPrice()>biLines.get(2).getPrice()){
+			point.setPrice((biLines.get(1).getPrice() + biLines.get(2).getPrice()) / 2.0);
+			if (biLines.get(1).getPrice() > biLines.get(2).getPrice()) {
 				point.setType(0);
-			}else{
+			} else {
 				point.setType(1);
 			}
 			lines.add(point);
 		}
-		
+
 		BiDesc temptzStart = null;
 		// 第一个特征向量
 		temptzStart = new BiDesc(start + 1, start + 2, biLines.get(start + 1), biLines.get(start + 2), 1);
@@ -373,7 +378,8 @@ public class LineUtils {
 	}
 
 	public static BiDesc copyProperties(BiDesc biDesc) {
-		return new BiDesc(biDesc.getStartIndex(),biDesc.getEndIndex(),copyPoint(biDesc.getStartBi()), copyPoint(biDesc.getEndBi()), biDesc.getType());
+		return new BiDesc(biDesc.getStartIndex(), biDesc.getEndIndex(), copyPoint(biDesc.getStartBi()),
+				copyPoint(biDesc.getEndBi()), biDesc.getType());
 	}
 
 	public static Point copyPoint(Point point) {

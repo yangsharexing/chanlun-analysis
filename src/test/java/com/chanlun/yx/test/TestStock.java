@@ -1,11 +1,13 @@
 package com.chanlun.yx.test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.chanlun.yx.data.dto.HL;
+import com.chanlun.yx.data.dto.HLDto;
 import com.chanlun.yx.data.dto.HistoryRecord;
-import com.chanlun.yx.data.util.StockTest;
+import com.chanlun.yx.data.util.ExportAbstractUtil;
+import com.chanlun.yx.data.util.StockTest2;
 import com.chanlun.yx.redis.RedisUtils;
 
 public class TestStock {
@@ -13,24 +15,22 @@ public class TestStock {
 	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
 
 		List<String> codes = RedisUtils.getAllKeys();
-		HL hl = new HL();
-		int maxDay = 14;
+		List<HLDto> hlList = new ArrayList<HLDto>();
+		int maxDay = 60;
 		for (String code : codes) {
-
 			if (code.contains("day")) {
 				continue;
 			}
-			
 //			System.out.println("-----------------------"+code);
 			List<HistoryRecord> list = RedisUtils.fetchData(code);
 			int index = 1000;
 			while (true) {
-				index = StockTest.test(code, list, index,hl,maxDay);
+				index = StockTest2.test(code, list, index,hlList);
 				if (index == 0) {
 					break;
 				}
 			}
 		}
-		System.out.println(hl.toString());
+		ExportAbstractUtil.excelOutPut(hlList,"61.xls");
 	}
 }

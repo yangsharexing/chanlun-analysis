@@ -106,7 +106,10 @@ public class BiLineUtils {
 		// 最后一笔不是完成笔，一个相反的笔才能确认前一笔（这里不考虑价位）
 		// 当个倒数第一个确认的点为 底时，则需要找到最后3个柱子，最高点是否大于底分型，如果满足则将这个高点设置为结束点。
 		// 倒数第一个确认点是顶分析，同理
-
+		
+		if(fenXinRecords.size()<1){
+			return fenXinRecords;
+		}
 		Point lastFenXin = fenXinRecords.get(fenXinRecords.size() - 1);
 		Point lastPoint = null;
 		if (lastFenXin.getType() == 1) {

@@ -2,6 +2,7 @@ package com.chanlun.yx.data.util;
 
 import java.util.List;
 
+import com.chanlun.yx.data.dto.BuyFeatrue;
 import com.chanlun.yx.data.dto.HistoryRecord;
 import com.chanlun.yx.data.dto.Line;
 import com.chanlun.yx.data.dto.LineFeature;
@@ -9,6 +10,7 @@ import com.chanlun.yx.data.dto.Point;
 
 public class BeiChiUtils {
 
+	
 	public static boolean isBeichi(Line line1, Line line2, List<HistoryRecord> list) {
 		LineFeature f1 = computLine(line1, list);
 		LineFeature f2 = computLine(line2, list);
@@ -19,6 +21,27 @@ public class BeiChiUtils {
 		}
 		return false;
 //		return true;
+	}
+	
+	public static boolean isBeichi(Line line1, Line line2, List<HistoryRecord> list,double preDiff,double afterDiff,BuyFeatrue buyf) {
+		
+		LineFeature f1 = computLine(line1, list);
+		LineFeature f2 = computLine(line2, list);
+		
+		buyf.setPreLineFeature(f1);
+		buyf.setAfterLineFeature(f2);
+		buyf.setPreDiff(preDiff);
+		buyf.setAfterDiff(afterDiff);
+		
+		System.out.println(preDiff+"    "+afterDiff +"    "+f1.getPriceStep()+"    "+f2.getPriceStep());
+//
+//		if (f1.getPriceStep() > f2.getPriceStep()*2) {
+//
+//			return true;
+//		}
+//		return false;
+		
+		return true;
 	}
 
 	public static boolean isBeichi(Line line, Point start, Point end, List<HistoryRecord> list) {
@@ -31,6 +54,19 @@ public class BeiChiUtils {
 			return true;
 		}
 		return false;
+//		return true;
+	}
+	public static boolean isBeichi(Line line, Point start, Point end, List<HistoryRecord> list,double preDiff,double afterDiff) {
+
+//		LineFeature f1 = computLine(line, list);
+//		LineFeature f2 = computPoint(start, end, list);
+//
+//		if (f1.getPriceStep() > f2.getPriceStep()*2) {
+//
+//			return true;
+//		}
+//		return false;
+		return true;
 	}
 
 	public static LineFeature computLine(Line line, List<HistoryRecord> list) {
