@@ -119,7 +119,10 @@ public class StockTest2 {
 						
 						hlDto.setPreDiff(buyfeature.getPreDiff());
 						hlDto.setAfterDiff(buyfeature.getAfterDiff());
-						System.out.println(hlDto);
+						
+						hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
+						hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
+//						System.out.println(hlDto);
 						hlList.add(hlDto);
 
 						return list.size() + j;
@@ -148,7 +151,14 @@ public class StockTest2 {
 							hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
 							hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
 							hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
-							System.out.println(hlDto);
+							
+							hlDto.setPreDiff(buyfeature.getPreDiff());
+							hlDto.setAfterDiff(buyfeature.getAfterDiff());
+							
+							hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
+							hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
+							
+//							System.out.println(hlDto);
 							hlList.add(hlDto);
 							return list.size() + j;
 						}
@@ -200,7 +210,15 @@ public class StockTest2 {
 					hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
 					hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
 					hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
-					System.out.println(hlDto);
+					
+					
+					
+					hlDto.setPreDiff(buyfeature.getPreDiff());
+					hlDto.setAfterDiff(buyfeature.getAfterDiff());
+					
+					hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
+					hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
+//					System.out.println(hlDto);
 					hlList.add(hlDto);
 					return 0;
 				}
@@ -264,6 +282,9 @@ public class StockTest2 {
 //					System.out.println(preDiff / price + "---" + afterDiff / price);
 					double buyPrice = list.get(list.size() - 1).getHigh();
 					buyf.setPrice(buyPrice);
+					buyf.setPreZhongshuLineNum(beforeTrendZS.getNum());
+					buyf.setAfterZhongshuLineNum(lastTrendSz.getNum());
+//					System.out.println("买入- "+list.get(list.size() - 1).getCode()+"   "+preDiff / price+"--- "+afterDiff / price+"--- "+beforeTrendZS.getNum()+"--- "+lastTrendSz.getNum());
 					return buyf;
 				}
 			} else {

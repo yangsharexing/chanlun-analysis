@@ -19,6 +19,28 @@ public class HLDto {
 	private double preDiff = 0;
 	private double afterDiff = 0;
 	
+	
+	private int preZhongshuLineNum;
+	
+	private int afterZhongshuLineNum;
+	
+	
+	public int getPreZhongshuLineNum() {
+		return preZhongshuLineNum;
+	}
+
+	public void setPreZhongshuLineNum(int preZhongshuLineNum) {
+		this.preZhongshuLineNum = preZhongshuLineNum;
+	}
+
+	public int getAfterZhongshuLineNum() {
+		return afterZhongshuLineNum;
+	}
+
+	public void setAfterZhongshuLineNum(int afterZhongshuLineNum) {
+		this.afterZhongshuLineNum = afterZhongshuLineNum;
+	}
+
 	public double getPreDiff() {
 		return preDiff;
 	}
@@ -142,7 +164,12 @@ public class HLDto {
 	@Override
 	public String toString() {
 		return "HLDto [code=" + code + ", buy=" + buy + ", sale=" + sale + ", dayNum=" + dayNum + ", startTm=" + startTm
-				+ ", endTm=" + endTm + ", yinliRate=" + yinliRate + ", prePriceStep=" + prePriceStep
-				+ ", afterPriceStep=" + afterPriceStep + "]";
+				+ ", endTm=" + endTm + ", yinliRate=" + yinliRate + ", prePriceStep=" + prePriceStep + ", preKLine="
+				+ preKLine + ", preVolume=" + preVolume + ", afterPriceStep=" + afterPriceStep + ", afterKLine="
+				+ afterKLine + ", afterVolume=" + afterVolume + ", preDiff=" + preDiff + ", afterDiff=" + afterDiff
+				+ ", preZhongshuLineNum=" + preZhongshuLineNum + ", afterZhongshuLineNum=" + afterZhongshuLineNum + "]";
 	}
+	
+	
+
 }

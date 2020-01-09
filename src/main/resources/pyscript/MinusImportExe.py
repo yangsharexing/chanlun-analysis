@@ -54,6 +54,6 @@ sum=1;
 for i in range(len(codeList)):
     print(codeList[i])
     print(codeList[i][0])
-    downLoadDayData(codeList[i][0],redis,"2019-08-01","2020-01-03","5")
+    downLoadDayData(codeList[i][0],redis,"2019-04-01","2020-08-01","5")
     sum = sum+1
     print("第几个============"+str(sum))

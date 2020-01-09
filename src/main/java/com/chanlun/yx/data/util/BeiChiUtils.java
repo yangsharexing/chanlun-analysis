@@ -33,7 +33,7 @@ public class BeiChiUtils {
 		buyf.setPreDiff(preDiff);
 		buyf.setAfterDiff(afterDiff);
 		
-		System.out.println(preDiff+"    "+afterDiff +"    "+f1.getPriceStep()+"    "+f2.getPriceStep());
+//		System.out.println(preDiff+"    "+afterDiff +"    "+f1.getPriceStep()+"    "+f2.getPriceStep());
 //
 //		if (f1.getPriceStep() > f2.getPriceStep()*2) {
 //

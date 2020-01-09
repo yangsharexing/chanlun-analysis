@@ -14,6 +14,26 @@ public class BuyFeatrue {
 	private double prePriceStep;
 	
 	private double afterPriceStep;
+	
+	private int preZhongshuLineNum;
+	
+	private int afterZhongshuLineNum;
+
+	public int getPreZhongshuLineNum() {
+		return preZhongshuLineNum;
+	}
+
+	public void setPreZhongshuLineNum(int preZhongshuLineNum) {
+		this.preZhongshuLineNum = preZhongshuLineNum;
+	}
+
+	public int getAfterZhongshuLineNum() {
+		return afterZhongshuLineNum;
+	}
+
+	public void setAfterZhongshuLineNum(int afterZhongshuLineNum) {
+		this.afterZhongshuLineNum = afterZhongshuLineNum;
+	}
 
 	public double getPreDiff() {
 		return preDiff;

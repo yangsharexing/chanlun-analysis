@@ -17,7 +17,13 @@ public class TestStock {
 		List<String> codes = RedisUtils.getAllKeys();
 		List<HLDto> hlList = new ArrayList<HLDto>();
 		int maxDay = 60;
+		
+		int cc = 0;
+		int size = codes.size();
 		for (String code : codes) {
+			cc++;
+			System.out.println("进度  -------------- "+ExportAbstractUtil.formatNum((double)cc/size));
+			
 			if (code.contains("day")) {
 				continue;
 			}

@@ -31,22 +31,22 @@ public abstract class ExportAbstractUtil {
 	public static void main(String[] args) {
 
 		// 3.#.00表示保留后两位，它的处理方式是直接截掉不要的尾数，不四舍五入。
-		DecimalFormat data = new DecimalFormat("#.0000");
-		String str = data.format(30.666666);
-		System.out.println(str);// 30.666666666666668
+//		DecimalFormat data = new DecimalFormat("#.0000");
+//		String str = data.format(30.666666);
+//		System.out.println(str);// 30.666666666666668
 
-		// HLDto dto = new HLDto();
-		// dto.setBuy(1);
-		// dto.setCode("12");
-		// dto.setDayNum(1);
-		// dto.setEndTm("232");
-		// dto.setStartTm("232");
-		// dto.setYinliRate(2);
-		// dto.setSale(1);
-		//
-		// List<HLDto> hls = new ArrayList<HLDto>();
-		// hls.add(dto);
-		// excelOutPut(hls,"60.xls");
+		 HLDto dto = new HLDto();
+		 dto.setBuy(1);
+		 dto.setCode("12");
+		 dto.setDayNum(1);
+		 dto.setEndTm("232");
+		 dto.setStartTm("232");
+		 dto.setYinliRate(2);
+		 dto.setSale(1);
+		
+		 List<HLDto> hls = new ArrayList<HLDto>();
+		 hls.add(dto);
+		 excelOutPut(hls,"60.xls");
 	}
 	
 	public static String formatNum(double value){
@@ -59,7 +59,7 @@ public abstract class ExportAbstractUtil {
 		// 拼接数据start
 		List<List<String>> lists = new ArrayList<List<String>>();
 		String rows[] = { "code", "buy", "sale", "dayNum", "startTm", "endTm", "yinliRate", "preKLine", "preVolume",
-				"prePriceStep", "afterKLine", "afterVolume", "afterPriceStep", "preDiff", "afterDiff" };
+				"prePriceStep", "afterKLine", "afterVolume", "afterPriceStep", "preDiff", "afterDiff","preZSLineNum","afterZSLineNum" };
 		List<String> rowsTitle = Arrays.asList(rows);
 		lists.add(rowsTitle);
 		for (int i = 0; i < hls.size(); i++) {
@@ -68,7 +68,7 @@ public abstract class ExportAbstractUtil {
 					dto.getStartTm(), dto.getEndTm(), formatNum(dto.getYinliRate()), dto.getPreKLine()+"",
 					formatNum(dto.getPreVolume()), formatNum(dto.getPrePriceStep()), dto.getAfterKLine()+"",
 					formatNum(dto.getAfterVolume()), formatNum(dto.getAfterPriceStep()), formatNum(dto.getPreDiff()),
-					formatNum(dto.getAfterDiff())};
+					formatNum(dto.getAfterDiff()),dto.getPreZhongshuLineNum()+"",dto.getAfterZhongshuLineNum()+""};
 			List<String> rowssList = Arrays.asList(rowss);
 			lists.add(rowssList);
 		}
