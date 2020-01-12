@@ -16,6 +16,17 @@ public class LineFeature {
 	
 	private double priceStep;
 	
+	private double macd;
+	
+	
+	public double getMacd() {
+		return macd;
+	}
+
+	public void setMacd(double macd) {
+		this.macd = macd;
+	}
+
 	public double getPriceStep() {
 		return priceStep;
 	}

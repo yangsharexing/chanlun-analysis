@@ -19,12 +19,41 @@ public class HLDto {
 	private double preDiff = 0;
 	private double afterDiff = 0;
 	
+	private double zhishui = 0;
+	
 	
 	private int preZhongshuLineNum;
 	
 	private int afterZhongshuLineNum;
 	
+	private double preMacd;
 	
+	private double afterMacd;
+	
+	public double getPreMacd() {
+		return preMacd;
+	}
+
+	public void setPreMacd(double preMacd) {
+		this.preMacd = preMacd;
+	}
+
+	public double getAfterMacd() {
+		return afterMacd;
+	}
+
+	public void setAfterMacd(double afterMacd) {
+		this.afterMacd = afterMacd;
+	}
+
+	public double getZhishui() {
+		return zhishui;
+	}
+
+	public void setZhishui(double zhishui) {
+		this.zhishui = zhishui;
+	}
+
 	public int getPreZhongshuLineNum() {
 		return preZhongshuLineNum;
 	}

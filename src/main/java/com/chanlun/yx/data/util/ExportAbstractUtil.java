@@ -59,7 +59,7 @@ public abstract class ExportAbstractUtil {
 		// 拼接数据start
 		List<List<String>> lists = new ArrayList<List<String>>();
 		String rows[] = { "code", "buy", "sale", "dayNum", "startTm", "endTm", "yinliRate", "preKLine", "preVolume",
-				"prePriceStep", "afterKLine", "afterVolume", "afterPriceStep", "preDiff", "afterDiff","preZSLineNum","afterZSLineNum" };
+				"prePriceStep", "afterKLine", "afterVolume", "afterPriceStep", "preDiff", "afterDiff","preZSLineNum","afterZSLineNum","zhisui","preMacd","afterMacd"};
 		List<String> rowsTitle = Arrays.asList(rows);
 		lists.add(rowsTitle);
 		for (int i = 0; i < hls.size(); i++) {
@@ -68,7 +68,7 @@ public abstract class ExportAbstractUtil {
 					dto.getStartTm(), dto.getEndTm(), formatNum(dto.getYinliRate()), dto.getPreKLine()+"",
 					formatNum(dto.getPreVolume()), formatNum(dto.getPrePriceStep()), dto.getAfterKLine()+"",
 					formatNum(dto.getAfterVolume()), formatNum(dto.getAfterPriceStep()), formatNum(dto.getPreDiff()),
-					formatNum(dto.getAfterDiff()),dto.getPreZhongshuLineNum()+"",dto.getAfterZhongshuLineNum()+""};
+					formatNum(dto.getAfterDiff()),dto.getPreZhongshuLineNum()+"",dto.getAfterZhongshuLineNum()+"",dto.getZhishui()+"",dto.getPreMacd()+"",dto.getAfterMacd()+""};
 			List<String> rowssList = Arrays.asList(rowss);
 			lists.add(rowssList);
 		}

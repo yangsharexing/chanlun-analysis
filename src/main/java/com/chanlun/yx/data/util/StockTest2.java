@@ -11,6 +11,7 @@ import com.chanlun.yx.data.dto.Line;
 import com.chanlun.yx.data.dto.Point;
 import com.chanlun.yx.data.dto.TrendType;
 import com.chanlun.yx.data.dto.ZhongShu;
+import com.chanlun.yx.redis.RedisUtils;
 
 /**
  * 股票走势测试（线段级别）
@@ -20,10 +21,40 @@ import com.chanlun.yx.data.dto.ZhongShu;
  */
 public class StockTest2 {
 
+	public static List<String> tradeList = new ArrayList<String>();
+
+	static {
+		List<HistoryRecord> list = RedisUtils.fetchData("java.sh.600000");
+		for (HistoryRecord record : list) {
+			if (!tradeList.contains(record.getStartTime().substring(0, 8))) {
+				tradeList.add(record.getStartTime().substring(0, 8));
+			}
+		}
+		
+		tradeList.add("20200110");
+		// 排序
+		for (int i = 0; i < tradeList.size(); i++) {
+
+			for (int j = i + 1; j < tradeList.size(); j++) {
+
+				Long jv = Long.parseLong(tradeList.get(j));
+				Long iv = Long.parseLong(tradeList.get(i));
+
+				if (iv > jv) {
+					tradeList.set(i, jv + "");
+					tradeList.set(j, iv + "");
+				}
+			}
+
+		}
+
+	}
+
 	public static int test(String code, List<HistoryRecord> historyList, int index, List<HLDto> hlList)
 			throws IllegalAccessException, InvocationTargetException {
 
-		HLDto hlDto = null;
+		TechnicalIndexUtils.computeMacd(historyList);
+		
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>();
 		List<HistoryRecord> afterlist = new ArrayList<HistoryRecord>();
 		if (historyList.size() < 500) {
@@ -100,30 +131,7 @@ public class StockTest2 {
 
 					if (a1.getPrice() < lastZhongshu.getGg()) {
 
-						// 最后一个中枢升级（说明走势已经在原来中枢波动区间 回调了）此时就是买点 ，因为已经进入一个更大级别的中枢
-						hlDto = new HLDto();
-						hlDto.setCode(code);
-						hlDto.setBuy(buyPrice);
-						hlDto.setSale(record.getLow());
-						hlDto.setDayNum(CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-						hlDto.setStartTm(buyTm);
-						hlDto.setEndTm(record.getEndTime());
-						hlDto.setYinliRate((record.getLow() - buyPrice) / buyPrice);
-						hlDto.setPreKLine(buyfeature.getPreLineFeature().getkNum());
-						hlDto.setPreVolume(buyfeature.getPreLineFeature().getVolume());
-						hlDto.setPrePriceStep(buyfeature.getPreLineFeature().getPriceStep());
-						
-						hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
-						hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
-						hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
-						
-						hlDto.setPreDiff(buyfeature.getPreDiff());
-						hlDto.setAfterDiff(buyfeature.getAfterDiff());
-						
-						hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
-						hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
-//						System.out.println(hlDto);
-						hlList.add(hlDto);
+						setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 0);
 
 						return list.size() + j;
 					}
@@ -135,91 +143,21 @@ public class StockTest2 {
 
 						if (salelastZhongshu.getDd() > lastZhongshu.getGg()) {
 
-							hlDto = new HLDto();
-							hlDto.setCode(code);
-							hlDto.setBuy(buyPrice);
-							hlDto.setSale(record.getLow());
-							hlDto.setDayNum(CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-							hlDto.setStartTm(buyTm);
-							hlDto.setEndTm(record.getEndTime());
-							hlDto.setYinliRate((record.getLow() - buyPrice) / buyPrice);
-							
-							hlDto.setPreKLine(buyfeature.getPreLineFeature().getkNum());
-							hlDto.setPreVolume(buyfeature.getPreLineFeature().getVolume());
-							hlDto.setPrePriceStep(buyfeature.getPreLineFeature().getPriceStep());
-							
-							hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
-							hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
-							hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
-							
-							hlDto.setPreDiff(buyfeature.getPreDiff());
-							hlDto.setAfterDiff(buyfeature.getAfterDiff());
-							
-							hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
-							hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
-							
-//							System.out.println(hlDto);
-							hlList.add(hlDto);
+							setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 0);
 							return list.size() + j;
 						}
 					}
 				}
+				
+				
+				if (risk(code, hlList, list, buyPrice, buyTm, buyfeature, j, record,lines,lines.size(),pointNum)) {
 
-				// 风险控制
-				// if (CommonUtils.caculateTotalTime(record.getEndTime(), buyTm)
-				// > 30) {
-				//
-				// if ((record.getLow() - buyPrice) / buyPrice < 0.01) {
-				//
-				// System.out.println(code + " " + buyTm + "买入" + buyPrice + " "
-				// + record.getEndTime() + "卖出"
-				// + record.getLow() + "获利" + (record.getLow() - buyPrice) /
-				// buyPrice + " index"
-				// + index);
-				// System.out.println("持仓天数（超过" + 30 + "） --- "
-				// + CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-				// hl.setHl(hl.getHl() + ((record.getLow() - buyPrice) /
-				// buyPrice) * 10000);
-				// hl.setNum(hl.getNum() + 1);
-				// hl.setDayNum(hl.getDayNum() +
-				// CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-				// if ((record.getLow() - buyPrice) / buyPrice > 0.002) {
-				// hl.setHlNum(hl.getHlNum() + 1);
-				// }
-				// System.out.println("总获利" + hl.getHl());
-				// return list.size() + j;
-				// }
-				//
-				// }
+					return list.size() + j;
+				}
 
 				if (j == afterlist.size() - 1) {
 
-					hlDto = new HLDto();
-					hlDto.setCode(code);
-					hlDto.setBuy(buyPrice);
-					hlDto.setSale(record.getLow());
-					hlDto.setDayNum(CommonUtils.caculateTotalTime(record.getEndTime(), buyTm));
-					hlDto.setStartTm(buyTm);
-					hlDto.setEndTm(record.getEndTime());
-					hlDto.setYinliRate((record.getLow() - buyPrice) / buyPrice);
-					
-					hlDto.setPreKLine(buyfeature.getPreLineFeature().getkNum());
-					hlDto.setPreVolume(buyfeature.getPreLineFeature().getVolume());
-					hlDto.setPrePriceStep(buyfeature.getPreLineFeature().getPriceStep());
-					
-					hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
-					hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
-					hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
-					
-					
-					
-					hlDto.setPreDiff(buyfeature.getPreDiff());
-					hlDto.setAfterDiff(buyfeature.getAfterDiff());
-					
-					hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
-					hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
-//					System.out.println(hlDto);
-					hlList.add(hlDto);
+					setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 2);
 					return 0;
 				}
 			}
@@ -227,12 +165,113 @@ public class StockTest2 {
 		return 0;
 	}
 
+	private static boolean risk(String code, List<HLDto> hlList, List<HistoryRecord> list, double buyPrice,
+			String buyTm, BuyFeatrue buyfeature, int j, HistoryRecord record,List<Point> lines,int pointNum,int orgPointNum) {
+
+		boolean flag = false;
+
+//		// 风险控制 持仓第一天出现就跌了两个点
+//		if (dayStep(record.getEndTime(), buyTm) == 1) {
+//
+//			if ((record.getLow() - buyPrice) / buyPrice < -0.02) {
+//				System.out.println("持仓1天亏损2个点");
+//				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//				flag = true;
+//			}
+//		}
+//		// 风险控制 持仓第2天出现就跌了两个点
+//		if (dayStep(record.getEndTime(), buyTm) == 2) {
+//
+//			if ((record.getLow() - buyPrice) / buyPrice < -0.01) {
+//				System.out.println("持仓2天亏损一个点");
+//				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//				flag = true;
+//			}
+//		}
+//		// 风险控制 持仓第3天还没有盈利
+//		if (dayStep(record.getEndTime(), buyTm) == 3) {
+//
+//			if ((record.getLow() - buyPrice) / buyPrice < 0.00) {
+//				System.out.println("持仓三天处于亏损");
+//				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//				flag = true;
+//			}
+//		}
+//		// 风险控制 持仓第3天还没有盈利
+//		if (dayStep(record.getEndTime(), buyTm) == 4) {
+//
+//			if ((record.getLow() - buyPrice) / buyPrice < 0.01) {
+//				System.out.println("持仓4天获利少于1个点");
+//				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//				flag = true;
+//			}
+//		}
+//		// 风险控制 持仓第3天还没有盈利
+//		if (dayStep(record.getEndTime(), buyTm) >= 5) {
+//
+//			if ((record.getLow() - buyPrice) / buyPrice < 0.02) {
+//				System.out.println("持仓大于等于5天获利少于2个点");
+//				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//				flag = true;
+//			}
+//		}
+		
+		if(pointNum>=orgPointNum+3) {
+			if(lines.get(lines.size()-2).getPrice()<buyfeature.getAfterZhongshu().getDd()) {
+				setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+				return true;
+			}
+			
+		}
+		
+//		if(record.getLow()<buyfeature.getPressPrice()&&(buyPrice - record.getLow())/buyPrice>0.05) {
+//			
+//			setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 1);
+//			flag = true;
+//		}
+		return flag;
+	}
+
+	private static void setTradeRecord(String code, List<HLDto> hlList, double buyPrice, String buyTm,
+			BuyFeatrue buyfeature, HistoryRecord record, int type) {
+		HLDto hlDto;
+		hlDto = new HLDto();
+		hlDto.setCode(code);
+		hlDto.setBuy(buyPrice);
+		hlDto.setSale(record.getLow());
+		hlDto.setDayNum(dayStep(record.getEndTime(), buyTm));
+		hlDto.setStartTm(buyTm);
+		hlDto.setEndTm(record.getEndTime());
+		hlDto.setYinliRate((record.getLow() - buyPrice) / buyPrice);
+
+		hlDto.setPreKLine(buyfeature.getPreLineFeature().getkNum());
+		hlDto.setPreVolume(buyfeature.getPreLineFeature().getVolume());
+		hlDto.setPrePriceStep(buyfeature.getPreLineFeature().getPriceStep());
+
+		hlDto.setAfterKLine(buyfeature.getAfterLineFeature().getkNum());
+		hlDto.setAfterVolume(buyfeature.getAfterLineFeature().getVolume());
+		hlDto.setAfterPriceStep(buyfeature.getAfterLineFeature().getPriceStep());
+
+		hlDto.setPreDiff(buyfeature.getPreDiff());
+		hlDto.setAfterDiff(buyfeature.getAfterDiff());
+
+		hlDto.setPreZhongshuLineNum(buyfeature.getPreZhongshuLineNum());
+		hlDto.setAfterZhongshuLineNum(buyfeature.getAfterZhongshuLineNum());
+		hlDto.setZhishui(type);
+		
+		hlDto.setPreMacd(buyfeature.getPreMacd());
+		hlDto.setAfterMacd(buyfeature.getAfterMacd());;
+		
+		System.out.println("持仓"+hlDto.getDayNum()+"天  收益"+hlDto.getYinliRate());
+		hlList.add(hlDto);
+	}
+
 	// buyPrice = buy(list, simpleKLines, biLines, lines, trendList);
-	private static BuyFeatrue buy(List<HistoryRecord> list, List<HistoryRecord> list2, List<Point> point, List<Point> lines,
-			List<TrendType> trendList) throws IllegalAccessException, InvocationTargetException {
-		
+	private static BuyFeatrue buy(List<HistoryRecord> list, List<HistoryRecord> list2, List<Point> point,
+			List<Point> lines, List<TrendType> trendList) throws IllegalAccessException, InvocationTargetException {
+
 		BuyFeatrue buyf = new BuyFeatrue();
-		
+
 		// 中枢或走势连接必须大于4个
 		if (trendList != null && trendList.size() > 3) {
 
@@ -275,57 +314,80 @@ public class StockTest2 {
 
 				// 计算几个锚点
 				double price = beforeTrendLine.getStartPoint().getPrice();
-
+				buyf.setPreZhongshu(beforeTrendZS);
+				buyf.setAfterZhongshu(lastTrendSz);
+		
 				// 两次离开中枢的幅度要超过一个固定的数目
-				if (BeiChiUtils.isBeichi(beforeTrendLine, lastTrendLine, list2, preDiff / price, afterDiff / price,buyf)) {
+				if (BeiChiUtils.isBeichi(beforeTrendZS,lastTrendSz,beforeTrendLine, lastTrendLine, list, preDiff / price, afterDiff / price,
+						buyf)) {
 					// 买入价格
-//					System.out.println(preDiff / price + "---" + afterDiff / price);
 					double buyPrice = list.get(list.size() - 1).getHigh();
-					buyf.setPrice(buyPrice);
-					buyf.setPreZhongshuLineNum(beforeTrendZS.getNum());
-					buyf.setAfterZhongshuLineNum(lastTrendSz.getNum());
-//					System.out.println("买入- "+list.get(list.size() - 1).getCode()+"   "+preDiff / price+"--- "+afterDiff / price+"--- "+beforeTrendZS.getNum()+"--- "+lastTrendSz.getNum());
-					return buyf;
+					
+//					System.out.println("过滤掉跌的买入---");
+					if(buyPrice>lastTrendLine.getEndPoint().getPrice()) {
+						
+						buyf.setPrice(buyPrice);
+					
+						buyf.setPreZhongshuLineNum(beforeTrendZS.getNum());
+						buyf.setAfterZhongshuLineNum(lastTrendSz.getNum());
+						buyf.setPressPrice(lastTrendLine.getEndPoint().getPrice());
+						return buyf;
+						
+					}
 				}
 			} else {
 
 				/*
-				 * // 获取最后一个中枢（中枢 ---向下--->中枢---向下 走势） ZhongShu lastTrendZs =
-				 * (ZhongShu) lastTrend;
+				 * // 获取最后一个中枢（中枢 ---向下--->中枢---向下 走势） ZhongShu lastTrendZs = (ZhongShu)
+				 * lastTrend;
 				 * 
-				 * double currentPrice = lines.get(lines.size() - 1).getPrice();
-				 * if (currentPrice >= lastTrendZs.getDd()) { // 中枢最后一笔比dd高
-				 * return 0; }
+				 * double currentPrice = lines.get(lines.size() - 1).getPrice(); if
+				 * (currentPrice >= lastTrendZs.getDd()) { // 中枢最后一笔比dd高 return 0; }
 				 * 
-				 * Line lastTrendTypeLine = (Line)trendList.get(trendList.size()
-				 * - 2); if (lastTrendTypeLine.getDirect() == 1) { // 向上 return
-				 * 0; }
+				 * Line lastTrendTypeLine = (Line)trendList.get(trendList.size() - 2); if
+				 * (lastTrendTypeLine.getDirect() == 1) { // 向上 return 0; }
 				 * 
-				 * ZhongShu beforeTrendTypeZs = (ZhongShu)
-				 * trendList.get(trendList.size() - 3);
+				 * ZhongShu beforeTrendTypeZs = (ZhongShu) trendList.get(trendList.size() - 3);
 				 * 
 				 * 
-				 * // 计算两者真实的价格区间 double preDiff =
-				 * lastTrendTypeLine.getStartPoint().getPrice() -
-				 * lastTrendTypeLine.getEndPoint().getPrice() -
-				 * (lastTrendTypeLine.getStartPoint().getPrice() -
-				 * beforeTrendTypeZs.getDd());
+				 * // 计算两者真实的价格区间 double preDiff = lastTrendTypeLine.getStartPoint().getPrice()
+				 * - lastTrendTypeLine.getEndPoint().getPrice() -
+				 * (lastTrendTypeLine.getStartPoint().getPrice() - beforeTrendTypeZs.getDd());
 				 * 
-				 * double afterDiff = Math.abs(currentPrice -
-				 * lastTrendZs.getDd());
+				 * double afterDiff = Math.abs(currentPrice - lastTrendZs.getDd());
 				 * 
-				 * if (preDiff / currentPrice > 0.05 && afterDiff / currentPrice
-				 * >0.05) {
+				 * if (preDiff / currentPrice > 0.05 && afterDiff / currentPrice >0.05) {
 				 * 
 				 * 
-				 * if (BeiChiUtils.isBeichi(lastTrendTypeLine,
-				 * lines.get(lines.size() - 2), lines.get(lines.size() - 1),
-				 * list)) { // 买入价格 double buyPrice = list.get(list.size() -
-				 * 1).getHigh(); return buyPrice; } }
+				 * if (BeiChiUtils.isBeichi(lastTrendTypeLine, lines.get(lines.size() - 2),
+				 * lines.get(lines.size() - 1), list)) { // 买入价格 double buyPrice =
+				 * list.get(list.size() - 1).getHigh(); return buyPrice; } }
 				 */
 			}
 		}
 		buyf.setPrice(0);
 		return buyf;
+	}
+
+	public static int dayStep(String endTime, String startTime) {
+
+		startTime = startTime.substring(0, 8);
+		endTime = endTime.substring(0, 8);
+
+		int start = 0;
+		;
+		int end = 0;
+		for (int i = 0; i < tradeList.size(); i++) {
+			if (startTime.equals(tradeList.get(i))) {
+				// 开始计数
+				start = i;
+			}
+			if (endTime.equals(tradeList.get(i))) {
+				// 开始计数
+				end = i;
+				break;
+			}
+		}
+		return end - start;
 	}
 }

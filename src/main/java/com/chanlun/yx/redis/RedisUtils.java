@@ -28,8 +28,10 @@ public class RedisUtils {
 		}
 	}
 
-	public static List<HistoryRecord> fetchData(String code) {
-		init();
+	public  synchronized static List<HistoryRecord> fetchData(String code) {
+		if(jedis==null) {
+			init();
+		}
 		String dataFrame = jedis.get(code);
 		return DataFrame2List.json2List(dataFrame);
 	}

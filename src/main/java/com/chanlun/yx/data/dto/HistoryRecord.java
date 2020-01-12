@@ -20,6 +20,65 @@ public class HistoryRecord {
 	
 	private String endTime;
 	
+	private double emaSamll;
+
+	private double emaBig;
+
+	private double dif;
+
+	private double macd;
+
+	private double bar;
+
+	private double dea;
+	
+	public double getEmaSamll() {
+		return emaSamll;
+	}
+
+	public void setEmaSamll(double emaSamll) {
+		this.emaSamll = emaSamll;
+	}
+
+	public double getEmaBig() {
+		return emaBig;
+	}
+
+	public void setEmaBig(double emaBig) {
+		this.emaBig = emaBig;
+	}
+
+	public double getDif() {
+		return dif;
+	}
+
+	public void setDif(double dif) {
+		this.dif = dif;
+	}
+
+	public double getMacd() {
+		return macd;
+	}
+
+	public void setMacd(double macd) {
+		this.macd = macd;
+	}
+
+	public double getBar() {
+		return bar;
+	}
+
+	public void setBar(double bar) {
+		this.bar = bar;
+	}
+
+	public double getDea() {
+		return dea;
+	}
+
+	public void setDea(double dea) {
+		this.dea = dea;
+	}
 
 	public String getStartTime() {
 		return startTime;

@@ -18,6 +18,56 @@ public class BuyFeatrue {
 	private int preZhongshuLineNum;
 	
 	private int afterZhongshuLineNum;
+	
+	private double pressPrice;
+	
+	private double preMacd;
+	
+	private double afterMacd;
+	
+	private ZhongShu preZhongshu;
+	
+	private ZhongShu afterZhongshu;
+	
+	public ZhongShu getPreZhongshu() {
+		return preZhongshu;
+	}
+
+	public void setPreZhongshu(ZhongShu preZhongshu) {
+		this.preZhongshu = preZhongshu;
+	}
+
+	public ZhongShu getAfterZhongshu() {
+		return afterZhongshu;
+	}
+
+	public void setAfterZhongshu(ZhongShu afterZhongshu) {
+		this.afterZhongshu = afterZhongshu;
+	}
+
+	public double getPreMacd() {
+		return preMacd;
+	}
+
+	public void setPreMacd(double preMacd) {
+		this.preMacd = preMacd;
+	}
+
+	public double getAfterMacd() {
+		return afterMacd;
+	}
+
+	public void setAfterMacd(double afterMacd) {
+		this.afterMacd = afterMacd;
+	}
+
+	public double getPressPrice() {
+		return pressPrice;
+	}
+
+	public void setPressPrice(double pressPrice) {
+		this.pressPrice = pressPrice;
+	}
 
 	public int getPreZhongshuLineNum() {
 		return preZhongshuLineNum;
