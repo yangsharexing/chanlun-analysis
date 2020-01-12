@@ -61,13 +61,16 @@ public class BeiChiUtils {
 //		}
 
 		if (Math.abs(f1.getMacd()) > Math.abs(f2.getMacd() * 3) && afterDiff > 0.05) {
-			if(buyf.getPreZhongshu().getNum()>9 && buyf.getPreZhongshu().getNum()>buyf.getAfterZhongshu().getNum()*2)
-//			if (f1.getMacd() < 0 && f2.getMacd() < 0) {
+			if(buyf.getPreZhongshu().getNum()>=8 && buyf.getAfterZhongshu().getNum()>=8) {
+				
+				if(buyf.getPreLineFeature().getkNum()>=90) {
+					
+					return true;
+				}
+			}
+				
 
-//				System.out.println("macd" + f1.getMacd() + "   " + f2.getMacd() + "背驰买入");
-
-				return true;
-//			}
+				
 
 		}
 		return false;

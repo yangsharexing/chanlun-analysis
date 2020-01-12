@@ -22,7 +22,7 @@ public class TestJob implements Callable<Object> {
 		int i = 0;
 		for (String code : codes) {
 			i++;
-//			System.out.println(Thread.currentThread().getName()+"开始了第： "+i+"   总共："+codes.size());
+			System.out.println(Thread.currentThread().getName()+"开始了第： "+i+"   总共："+codes.size());
 			
 //			System.out.println("-----------------------"+code);
 			List<HistoryRecord> list = RedisUtils.fetchData(code);

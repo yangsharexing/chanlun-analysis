@@ -17,10 +17,10 @@ public class TestJobService {
 
 		List<String> codes = RedisUtils.getAllKeys();
 		
-		codes = codes.subList(0, 800);
+//		codes = codes.subList(0, 800);
 		List<HLDto> hlList = new ArrayList<HLDto>();
 		int maxDay = 60;
-		int step = 200;
+		int step = 400;
 		int num = codes.size() / step;
 
 		List<Future<Object>> flist = new ArrayList<Future<Object>>();
