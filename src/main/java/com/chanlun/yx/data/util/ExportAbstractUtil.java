@@ -103,7 +103,8 @@ public abstract class ExportAbstractUtil {
 	private static void pwrite(Workbook workbook, String fileName) {
 		OutputStream out = null;
 		try {
-			out = new FileOutputStream("C://" + fileName + ".xls");
+			out = new FileOutputStream("/home/yangxing/code/" + fileName + ".xls");
+//			out = new FileOutputStream("C://" + fileName + ".xls");
 			workbook.write(out);
 		} catch (Exception e) {
 			e.printStackTrace();
