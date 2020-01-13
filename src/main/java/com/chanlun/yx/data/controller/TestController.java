@@ -20,7 +20,7 @@ public class TestController {
 	
 	@RequestMapping("/test")
 	public void test() throws InterruptedException, ExecutionException {
-
+   
 		test1();
 	}
 	
