@@ -60,20 +60,21 @@ public class BeiChiUtils {
 //			}
 //		}
 
-		if (Math.abs(f1.getMacd()) > Math.abs(f2.getMacd() * 3) && afterDiff > 0.05) {
-			if(buyf.getPreZhongshu().getNum()>=8 && buyf.getAfterZhongshu().getNum()>=8) {
-				
-				if(buyf.getPreLineFeature().getkNum()>=90) {
-					
-					return true;
-				}
-			}
-				
-
-				
-
-		}
-		return false;
+//		if (Math.abs(f1.getMacd()) > Math.abs(f2.getMacd() * 3) && afterDiff > 0.00) {
+//			if(buyf.getPreZhongshu().getNum()>=9 && buyf.getAfterZhongshu().getNum()<9) {
+//				
+//				if(buyf.getPreLineFeature().getkNum()>=90) {
+//					
+//					if(f1.getMacd()>0 && afterDiff>0) {
+//						
+//						return true;
+//					}
+//					
+//				}
+//			}
+//		}
+		return true;
+//		return false;
 	}
 
 	public static boolean isBeichi(Line line, Point start, Point end, List<HistoryRecord> list) {

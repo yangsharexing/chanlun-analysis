@@ -17,7 +17,7 @@ public class TestJobService {
 
 		List<String> codes = RedisUtils.getAllKeys();
 		
-//		codes = codes.subList(0, 800);
+		codes = codes.subList(800, 1600);
 		List<HLDto> hlList = new ArrayList<HLDto>();
 		int maxDay = 60;
 		int step = 400;
@@ -69,7 +69,7 @@ public class TestJobService {
 
 		}
 		
-		ExportAbstractUtil.excelOutPut(hlList, "100 .xls");
+		ExportAbstractUtil.excelOutPut(hlList, "101.xls");
 	}
 
 }
