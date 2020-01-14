@@ -29,7 +29,7 @@ public class TestController {
 	public void test1() throws InterruptedException, ExecutionException {
 	List<String> codes = RedisUtils.getAllKeys();
 		
-		codes = codes.subList(800, 1600);
+//		codes = codes.subList(800, 1600);
 		List<HLDto> hlList = new ArrayList<HLDto>();
 		int maxDay = 60;
 		int step = 400;
