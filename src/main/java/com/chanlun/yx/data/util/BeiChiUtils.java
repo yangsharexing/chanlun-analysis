@@ -29,13 +29,13 @@ public class BeiChiUtils {
 		return false;
 //		return true;
 	}
-	
-	//最后一个参数 表示 中枢+连接  走势的最低点
-	public static boolean isBeichi(ZhongShu preZSLine, ZhongShu afterZS, Line line1, Line line2,
-			List<HistoryRecord> list, double preDiff, double afterDiff, BuyFeatrue buyf,Point point) {
 
-		LineFeature f1 = computLineV2(preZSLine, afterZS, line1, list, 1,null);
-		LineFeature f2 = computLineV2(preZSLine, afterZS, line2, list, 2,point);
+	// 最后一个参数 表示 中枢+连接 走势的最低点
+	public static boolean isBeichi(ZhongShu preZSLine, ZhongShu afterZS, Line line1, Line line2,
+			List<HistoryRecord> list, double preDiff, double afterDiff, BuyFeatrue buyf, Point point) {
+
+		LineFeature f1 = computLineV2(preZSLine, afterZS, line1, list, 1, null);
+		LineFeature f2 = computLineV2(preZSLine, afterZS, line2, list, 2, point);
 
 		buyf.setPreLineFeature(f1);
 		buyf.setAfterLineFeature(f2);
@@ -74,7 +74,9 @@ public class BeiChiUtils {
 //				}
 //			}
 //		}
+
 		return true;
+
 //		return false;
 	}
 
@@ -144,7 +146,7 @@ public class BeiChiUtils {
 	}
 
 	public static LineFeature computLineV2(ZhongShu preZSLine, ZhongShu afterZS, Line line, List<HistoryRecord> list,
-			int type,Point point) {
+			int type, Point point) {
 		LineFeature feature = new LineFeature();
 		Point startPoint = line.getStartPoint();
 		Point endPoint = line.getEndPoint();
@@ -178,9 +180,9 @@ public class BeiChiUtils {
 					break;
 				}
 			}
-			
-			if(istartIndex==0) {
-				
+
+			if (istartIndex == 0) {
+
 				istartIndex = startIndex;
 			}
 
@@ -193,8 +195,8 @@ public class BeiChiUtils {
 					break;
 				}
 			}
-			if(iendIndex==0) {
-				
+			if (iendIndex == 0) {
+
 				iendIndex = endIndex;
 			}
 		} else {
@@ -206,38 +208,25 @@ public class BeiChiUtils {
 					istartIndex = i;
 					break;
 				}
-				
-			}
-				if(istartIndex==0) {
-					
-					istartIndex = startIndex;
-				}
-				
-				for (int i = startIndex; i <= endIndex; i++) {
 
-					HistoryRecord record = list.get(i);
-					if (record.getLow() <= point.getPrice()) {
-						iendIndex = i;
-						break;
-					}
+			}
+			if (istartIndex == 0) {
+
+				istartIndex = startIndex;
+			}
+
+			for (int i = startIndex; i <= endIndex; i++) {
+
+				HistoryRecord record = list.get(i);
+				if (record.getLow() <= point.getPrice()) {
+					iendIndex = i;
+					break;
 				}
-				if(iendIndex==0) {
-					
-					iendIndex = list.size()-1;
-				}
-		}
-		if (istartIndex == 0 || iendIndex == 0) {
-			System.out.println(preZSLine);
-			System.out.println(afterZS);
-			System.out.println(list.get(startIndex));
-			System.out.println(list.get(endIndex));
-			System.out.println(startIndex+"  "+endIndex);
-			System.out.println("系统错乱");
-			System.out.println("系统错乱");
-			System.out.println("系统错乱");
-			System.out.println("系统错乱");
-			System.out.println("系统错乱");
-			System.out.println("系统错乱");
+			}
+			if (iendIndex == istartIndex) {
+
+				iendIndex = istartIndex + 1;
+			}
 		}
 
 		for (int i = istartIndex; i <= iendIndex; i++) {

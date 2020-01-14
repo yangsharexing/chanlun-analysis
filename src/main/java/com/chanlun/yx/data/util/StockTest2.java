@@ -114,6 +114,12 @@ public class StockTest2 {
 				buyTm = record.getEndTime();
 				flag = false;
 			} else {
+				
+				//如果当前点和买点在同一天则不处理
+				if(list.get(list.size()-1).getEndTime().substring(0, 8).equals(buyTm.substring(0, 8))) {
+					
+					continue;
+				}
 				// 这里开始卖
 				List<HistoryRecord> simpleKLines = KLineUtils.handleKLine(list);
 				List<Point> biLines = BiLineUtils.contructBiLines(simpleKLines);
