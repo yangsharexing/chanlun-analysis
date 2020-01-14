@@ -74,7 +74,6 @@ public class BeiChiUtils {
 //				}
 //			}
 //		}
-
 		return true;
 
 //		return false;
