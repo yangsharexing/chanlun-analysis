@@ -319,7 +319,7 @@ public class StockTest2 {
 		
 				// 两次离开中枢的幅度要超过一个固定的数目
 				if (BeiChiUtils.isBeichi(beforeTrendZS,lastTrendSz,beforeTrendLine, lastTrendLine, list, preDiff / price, afterDiff / price,
-						buyf)) {
+						buyf,lines.get(lines.size()-3))) {
 					// 买入价格
 					double buyPrice = list.get(list.size() - 1).getHigh();
 					

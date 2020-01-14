@@ -3,14 +3,11 @@ package com.chanlun.yx.data.util;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -46,7 +43,7 @@ public abstract class ExportAbstractUtil {
 		
 		 List<HLDto> hls = new ArrayList<HLDto>();
 		 hls.add(dto);
-		 excelOutPut(hls,"60.xls");
+		 excelOutPut(hls,"90.xls");
 	}
 	
 	public static String formatNum(double value){
@@ -103,8 +100,8 @@ public abstract class ExportAbstractUtil {
 	private static void pwrite(Workbook workbook, String fileName) {
 		OutputStream out = null;
 		try {
-			out = new FileOutputStream("/home/yangxing/code/" + fileName + ".xls");
-//			out = new FileOutputStream("C://" + fileName + ".xls");
+			out = new FileOutputStream("/home/yangxing/code/" + fileName);
+//			out = new FileOutputStream("C://" + fileName);
 			workbook.write(out);
 		} catch (Exception e) {
 			e.printStackTrace();
