@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.chanlun.yx.data.dto.HLDto;
 import com.chanlun.yx.data.dto.MonitorQueryDto;
@@ -15,6 +16,7 @@ import com.chanlun.yx.data.util.ExportAbstractUtil;
 import com.chanlun.yx.redis.RedisUtils;
 import com.chanlun.yx.thread.TestJob;
 
+@RestController
 public class TestController {
 	
 	
