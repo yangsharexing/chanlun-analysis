@@ -151,92 +151,30 @@ public class BeiChiUtils {
 		Point endPoint = line.getEndPoint();
 		int knum = 0;
 		double volume = 0;
-		boolean flag = false;
 		double macd = 0;
 		int startIndex = 0;
 		int endIndex = 0;
-		int istartIndex = 0;
-		int iendIndex = 0;
-
-		for (int i = 0; i < list.size(); i++) {
-			HistoryRecord record = list.get(i);
-			if (record.getEndTime().equals(startPoint.getTime())) {
+		
+		for(int i=0;i<list.size();i++) {
+			if(list.get(i).getEndTime().equals(startPoint.getTime())) {
 				startIndex = i;
-				continue;
-			}
-			if (record.getEndTime().endsWith(endPoint.getTime())) {
-				endIndex = i;
-				break;
+				for(int j=i;j<list.size();j++) {
+					if(list.get(j).getEndTime().equals(endPoint.getTime())) {
+						endIndex = j;
+					}
+					if(endIndex==0) {
+						endIndex = list.size()-1;
+					}
+				}
 			}
 		}
-		if (type == 1) {// 类型为前一段
-
-			for (int i = endIndex; i >= startIndex; i--) {
-				HistoryRecord record = list.get(i);
-				if (record.getHigh() >= preZSLine.getDd()) {
-
-					istartIndex = i;
-					break;
-				}
-			}
-
-			if (istartIndex == 0) {
-
-				istartIndex = startIndex;
-			}
-
-			for (int i = startIndex; i <= endIndex; i++) {
-
-				HistoryRecord record = list.get(i);
-				if (record.getLow() <= afterZS.getZg()) {
-
-					iendIndex = i;
-					break;
-				}
-			}
-			if (iendIndex == 0) {
-
-				iendIndex = endIndex;
-			}
-		} else {
-
-			for (int i = endIndex; i >= startIndex; i--) {
-				HistoryRecord record = list.get(i);
-				if (record.getHigh() >= afterZS.getDd()) {
-
-					istartIndex = i;
-					break;
-				}
-
-			}
-			if (istartIndex == 0) {
-
-				istartIndex = startIndex;
-			}
-
-			for (int i = startIndex; i <= endIndex; i++) {
-
-				HistoryRecord record = list.get(i);
-				if (record.getLow() <= point.getPrice()) {
-					iendIndex = i;
-					break;
-				}
-			}
-			if (iendIndex == istartIndex) {
-
-				iendIndex = istartIndex + 1;
-			}
-		}
-
-		for (int i = istartIndex; i <= iendIndex; i++) {
+		for (int i = startIndex; i <= endIndex; i++) {
 			HistoryRecord record = list.get(i);
 			knum = knum + 1;
 			macd = macd + record.getBar();
 			volume = volume + record.getVolume();
 		}
-
 		// 往后面倒退数，发一个第一个大于前ZS dd的，的点为起始点
-
 		feature.setStartPoint(startPoint);
 		feature.setEndPoint(endPoint);
 		feature.setkNum(knum);
