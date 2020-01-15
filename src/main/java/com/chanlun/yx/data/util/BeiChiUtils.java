@@ -174,6 +174,7 @@ public class BeiChiUtils {
 			macd = macd + record.getBar();
 			volume = volume + record.getVolume();
 		}
+		
 		// 往后面倒退数，发一个第一个大于前ZS dd的，的点为起始点
 		feature.setStartPoint(startPoint);
 		feature.setEndPoint(endPoint);
