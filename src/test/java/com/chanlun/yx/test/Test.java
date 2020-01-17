@@ -23,10 +23,15 @@ import com.chanlun.yx.redis.RedisUtils;
 public class Test {
 	
 	public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
-		for(int i = 1;i<20;i++){
-			System.out.println("----------------------------------"+i);
-			test(1000+i*50);
-		}
+		
+		String timeStr = "20200101";
+		String time = timeStr.substring(0,4)+"-"+timeStr.substring(4,6)+"-"+timeStr.substring(6,8);
+		System.out.println(time);
+		
+//		for(int i = 1;i<20;i++){
+//			System.out.println("----------------------------------"+i);
+//			test(1000+i*50);
+//		}
 	}
 	
 	public static void test(int end) throws IllegalAccessException, InvocationTargetException {

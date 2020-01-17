@@ -21,7 +21,8 @@ import com.chanlun.yx.redis.RedisUtils;
  */
 public class StockTest2 {
 
-	public static List<String> tradeList = new ArrayList<String>();
+	public static List<String> tradeList = new ArrayList<String>();//20200101 格式
+	public static List<String> tradeList2 = new ArrayList<String>();//2020-01-01 格式
 
 	static {
 		List<HistoryRecord> list = RedisUtils.fetchData("java.sh.600000");
@@ -47,6 +48,17 @@ public class StockTest2 {
 			}
 
 		}
+		
+		for(int i = 0; i < tradeList.size(); i++){
+			
+			String timeStr = tradeList.get(i);
+			
+			String time = timeStr.substring(0,4)+"-"+timeStr.substring(4,6)+"-"+timeStr.substring(6,8);
+			
+			tradeList2.add(time);
+			
+		}
+		
 
 	}
 
@@ -377,24 +389,49 @@ public class StockTest2 {
 	}
 
 	public static int dayStep(String endTime, String startTime) {
-
-		startTime = startTime.substring(0, 8);
-		endTime = endTime.substring(0, 8);
-
-		int start = 0;
-		;
-		int end = 0;
-		for (int i = 0; i < tradeList.size(); i++) {
-			if (startTime.equals(tradeList.get(i))) {
-				// 开始计数
-				start = i;
+		
+		if(startTime.length()>10){
+			
+			startTime = startTime.substring(0, 8);
+			endTime = endTime.substring(0, 8);
+			int start = 0;
+			;
+			int end = 0;
+			for (int i = 0; i < tradeList.size(); i++) {
+				if (startTime.equals(tradeList.get(i))) {
+					// 开始计数
+					start = i;
+				}
+				if (endTime.equals(tradeList.get(i))) {
+					// 开始计数
+					end = i;
+					break;
+				}
 			}
-			if (endTime.equals(tradeList.get(i))) {
-				// 开始计数
-				end = i;
-				break;
+			return end - start;
+		}else{
+			
+			startTime = startTime.substring(0, 8);
+			endTime = endTime.substring(0, 8);
+			int start = 0;
+			;
+			int end = 0;
+			for (int i = 0; i < tradeList2.size(); i++) {
+				if (startTime.equals(tradeList2.get(i))) {
+					// 开始计数
+					start = i;
+				}
+				if (endTime.equals(tradeList2.get(i))) {
+					// 开始计数
+					end = i;
+					break;
+				}
 			}
+			return end - start;
 		}
-		return end - start;
+	
+
+	
+		
 	}
 }
