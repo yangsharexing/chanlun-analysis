@@ -432,6 +432,7 @@ public class ZhongShuUtils {
 		Point p5 = new Point("5", 4, 1);
 		Point p6 = new Point("6", 0.3, 0);
 		Point p7 = new Point("7", 0.4, 1);
+		Point p8 = new Point("8", 0.35, 0);
 		
 		List<Point> points = new ArrayList<Point>();
 		points.add(p1);
@@ -441,6 +442,7 @@ public class ZhongShuUtils {
 		points.add(p5);
 		points.add(p6);
 		points.add(p7);
+		points.add(p8);
 		List<TrendType> list = findZhongShu(points);
 		System.out.println(list);
 		

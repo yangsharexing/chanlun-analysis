@@ -32,10 +32,16 @@ public class BeiChiUtils {
 
 	// 最后一个参数 表示 中枢+连接 走势的最低点
 	public static boolean isBeichi(ZhongShu preZSLine, ZhongShu afterZS, Line line1, Line line2,
-			List<HistoryRecord> list, double preDiff, double afterDiff, BuyFeatrue buyf, Point point) {
-
-		LineFeature f1 = computLineV2(preZSLine, afterZS, line1, list, 1, null);
-		LineFeature f2 = computLineV2(preZSLine, afterZS, line2, list, 2, point);
+			List<HistoryRecord> list, double preDiff, double afterDiff, BuyFeatrue buyf, List<Point> points) {
+		
+		if(points.get(points.size()-1).getPrice()<points.get(points.size()-2).getPrice()){
+			
+			return false;
+		}
+		
+		
+		LineFeature f1 = computLineV2(preZSLine, afterZS, line1, list, 1);
+		LineFeature f2 = computLineV2(preZSLine, afterZS, line2, list, 2);
 
 		buyf.setPreLineFeature(f1);
 		buyf.setAfterLineFeature(f2);
@@ -145,7 +151,7 @@ public class BeiChiUtils {
 	}
 
 	public static LineFeature computLineV2(ZhongShu preZSLine, ZhongShu afterZS, Line line, List<HistoryRecord> list,
-			int type, Point point) {
+			int type) {
 		LineFeature feature = new LineFeature();
 		Point startPoint = line.getStartPoint();
 		Point endPoint = line.getEndPoint();

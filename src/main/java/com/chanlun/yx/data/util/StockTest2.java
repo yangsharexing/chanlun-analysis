@@ -288,6 +288,7 @@ public class StockTest2 {
 			if (lastTrend instanceof Line) {
 
 				Line lastTrendLine = (Line) lastTrend;
+				
 				if (lastTrendLine.getDirect() == 1) {
 					// 向上线段离开中枢，直接pass
 					buyf.setPrice(0);
@@ -322,10 +323,10 @@ public class StockTest2 {
 				double price = beforeTrendLine.getStartPoint().getPrice();
 				buyf.setPreZhongshu(beforeTrendZS);
 				buyf.setAfterZhongshu(lastTrendSz);
-		
+				
 				// 两次离开中枢的幅度要超过一个固定的数目
 				if (BeiChiUtils.isBeichi(beforeTrendZS,lastTrendSz,beforeTrendLine, lastTrendLine, list, preDiff / price, afterDiff / price,
-						buyf,lines.get(lines.size()-3))) {
+						buyf,lines)) {
 					// 买入价格
 					double buyPrice = list.get(list.size() - 1).getHigh();
 					
