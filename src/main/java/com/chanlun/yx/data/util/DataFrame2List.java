@@ -28,7 +28,12 @@ public class DataFrame2List {
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>(dataList.size());
 		for (int i = 0; i < dataList.size(); i++) {
 			data = new HistoryRecord();
-			data.setTime(timeList.getString(i));
+			if(timeList == null || timeList.size()==0){
+				data.setTime(dataList.getString(i));
+			}else{
+				data.setTime(timeList.getString(i));
+			}
+			
 			data.setStartTime(timeList.getString(i));
 			data.setEndTime(timeList.getString(i));
 			data.setCode(codeList.getString(i));
