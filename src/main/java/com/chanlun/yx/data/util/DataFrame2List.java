@@ -30,12 +30,15 @@ public class DataFrame2List {
 			data = new HistoryRecord();
 			if(timeList == null || timeList.size()==0){
 				data.setTime(dataList.getString(i));
+				data.setStartTime(dataList.getString(i));
+				data.setEndTime(dataList.getString(i));
 			}else{
 				data.setTime(timeList.getString(i));
+				data.setStartTime(timeList.getString(i));
+				data.setEndTime(timeList.getString(i));
 			}
 			
-			data.setStartTime(timeList.getString(i));
-			data.setEndTime(timeList.getString(i));
+			
 			data.setCode(codeList.getString(i));
 			data.setOpen(openList.getDouble(i));
 			data.setHigh(highList.getDouble(i));
