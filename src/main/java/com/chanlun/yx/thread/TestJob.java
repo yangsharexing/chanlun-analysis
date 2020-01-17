@@ -26,7 +26,7 @@ public class TestJob implements Callable<Object> {
 			
 //			System.out.println("-----------------------"+code);
 			List<HistoryRecord> list = RedisUtils.fetchData(code);
-			int index = 1000;
+			int index = 50;
 			while (true) {
 				index = StockTest2.test(code, list, index, hlList);
 				if (index == 0) {
