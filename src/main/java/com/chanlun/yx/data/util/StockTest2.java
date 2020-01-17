@@ -58,7 +58,7 @@ public class StockTest2 {
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>();
 		List<HistoryRecord> afterlist = new ArrayList<HistoryRecord>();
 		if (historyList.size() < 50) {
-			// k线不足500根不做处理
+			// k线不足500根不做处理 
 			return 0;
 		}
 		if (index >= historyList.size() - 10) {
