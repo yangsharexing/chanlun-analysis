@@ -443,10 +443,7 @@ public class StockTest2 {
 			return end - start;
 		} else {
 
-			startTime = startTime.substring(0, 8);
-			endTime = endTime.substring(0, 8);
 			int start = 0;
-			;
 			int end = 0;
 			for (int i = 0; i < tradeList2.size(); i++) {
 				if (startTime.equals(tradeList2.get(i))) {
