@@ -89,12 +89,12 @@ public class StockTest2 {
 			// 寻找买点
 			if (flag) {
 				List<HistoryRecord> simpleKLines = KLineUtils.handleKLine(list);
-				List<Point> biLines = BiLineUtils.contructBiLines(simpleKLines);
-				List<Point> lines = LineUtils.bi2Line(biLines);
+				List<Point> lines = BiLineUtils.contructBiLines(simpleKLines);
+//				List<Point> lines = LineUtils.bi2Line(biLines);
 				List<TrendType> trendList = ZhongShuUtils.findZhongShu(lines);
 
 				// 买入
-				buyfeature = buy(list, simpleKLines, biLines, lines, trendList);
+				buyfeature = buy(list, simpleKLines, lines, trendList);
 				buyPrice = buyfeature.getPrice();
 				if (buyPrice == 0) {
 					continue;
@@ -122,8 +122,8 @@ public class StockTest2 {
 				}
 				// 这里开始卖
 				List<HistoryRecord> simpleKLines = KLineUtils.handleKLine(list);
-				List<Point> biLines = BiLineUtils.contructBiLines(simpleKLines);
-				List<Point> lines = LineUtils.bi2Line(biLines);
+				List<Point> lines = BiLineUtils.contructBiLines(simpleKLines);
+//				List<Point> lines = LineUtils.bi2Line(biLines);
 				if (lines.size() <= pointNum) {
 					continue;
 				}
@@ -273,7 +273,7 @@ public class StockTest2 {
 	}
 
 	// buyPrice = buy(list, simpleKLines, biLines, lines, trendList);
-	private static BuyFeatrue buy(List<HistoryRecord> list, List<HistoryRecord> list2, List<Point> point,
+	private static BuyFeatrue buy(List<HistoryRecord> list, List<HistoryRecord> list2, 
 			List<Point> lines, List<TrendType> trendList) throws IllegalAccessException, InvocationTargetException {
 
 		BuyFeatrue buyf = new BuyFeatrue();
