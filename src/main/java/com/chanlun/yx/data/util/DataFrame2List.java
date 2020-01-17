@@ -24,7 +24,7 @@ public class DataFrame2List {
 		JSONArray lowList = obj.getJSONArray("low");
 		JSONArray closeList = obj.getJSONArray("close");
 		JSONArray volumeList = obj.getJSONArray("volume");
- 
+  
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>(dataList.size());
 		for (int i = 0; i < dataList.size(); i++) {
 			data = new HistoryRecord();

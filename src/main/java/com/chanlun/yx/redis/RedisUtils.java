@@ -44,7 +44,7 @@ public class RedisUtils {
 
 	public static List<String> getAllKeys() {
 		init();
-		Set<String> keys = jedis.keys("java*");
+		Set<String> keys = jedis.keys("day*");
 		return new ArrayList<String>(keys);
 	}
 
