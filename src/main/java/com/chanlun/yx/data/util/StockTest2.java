@@ -429,9 +429,5 @@ public class StockTest2 {
 			}
 			return end - start;
 		}
-	
-
-	
-		
 	}
 }
