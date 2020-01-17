@@ -56,10 +56,7 @@ public class StockTest2 {
 			String time = timeStr.substring(0,4)+"-"+timeStr.substring(4,6)+"-"+timeStr.substring(6,8);
 			
 			tradeList2.add(time);
-			
 		}
-		
-
 	}
 
 	public static int test(String code, List<HistoryRecord> historyList, int index, List<HLDto> hlList)
