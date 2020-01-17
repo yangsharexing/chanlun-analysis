@@ -19,7 +19,7 @@ import com.chanlun.yx.redis.RedisUtils;
  * @author Administrator
  *
  */
-public class StockTest2 {
+public class StockTest3 {
 
 	public static List<String> tradeList = new ArrayList<String>();// 20200101
 																	// 格式
@@ -126,7 +126,6 @@ public class StockTest2 {
 				flag = false;
 			} else {
 
-				// 如果当前点和买点在同一天则不处理
 				if(buyTm.length()>10){
 					// 如果当前点和买点在同一天则不处理
 					if (list.get(list.size() - 1).getEndTime().substring(0, 8).equals(buyTm.substring(0, 8))) {
@@ -140,6 +139,7 @@ public class StockTest2 {
 					}
 					
 				}
+				
 				// 这里开始卖
 				List<HistoryRecord> simpleKLines = KLineUtils.handleKLine(list);
 				List<Point> lines = BiLineUtils.contructBiLines(simpleKLines);
@@ -151,34 +151,49 @@ public class StockTest2 {
 
 				// 最后两点
 				Point a1 = lines.get(lines.size() - 1);// 最后一点
-				Point a2 = lines.get(lines.size() - 2);// 最后第二点
 
-				if (a1.getPrice() < a2.getPrice() && a2.getPrice() > lastZhongshu.getZd())
+				if (a1.getPrice() <  lastZhongshu.getGg()){
 
-					if (a1.getPrice() < lastZhongshu.getGg()) {
 
 						setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 0);
 
 						return list.size() + j;
-					}
-
+				}
 				if (ttlist.size() > zoushiNum) {
 
 					if (ttlist.get(ttlist.size() - 1) instanceof ZhongShu) {
 						ZhongShu salelastZhongshu = (ZhongShu) ttlist.get(ttlist.size() - 1);
-
-						if (salelastZhongshu.getDd() > lastZhongshu.getGg()) {
-
+						
+						if(salelastZhongshu.getLevel()>=2){
+							//中枢升级为盘整
+							setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 0);
+							return list.size() + j;
+							
+						}
+						
+						ZhongShu salesecZhongshu = (ZhongShu) ttlist.get(ttlist.size() - 3);
+						//如果是否背驰
+						
+						
+						
+					}else{
+						
+						Line salelastLine = (Line) ttlist.get(ttlist.size() - 1);
+						
+						if(salelastLine.getDirect()==0){
+							
+							//中枢升级为盘整
 							setTradeRecord(code, hlList, buyPrice, buyTm, buyfeature, record, 0);
 							return list.size() + j;
 						}
+						
 					}
 				}
 
-				if (risk(code, hlList, list, buyPrice, buyTm, buyfeature, j, record, lines, lines.size(), pointNum)) {
-
-					return list.size() + j;
-				}
+//				if (risk(code, hlList, list, buyPrice, buyTm, buyfeature, j, record, lines, lines.size(), pointNum)) {
+//
+//					return list.size() + j;
+//				}
 
 				if (j == afterlist.size() - 1) {
 
@@ -334,35 +349,35 @@ public class StockTest2 {
 
 				Line lastTrendLine = (Line) lastTrend;
 
-				if (lastTrendLine.getDirect() == 1) {
-					// 向上线段离开中枢，直接pass
+				if (lastTrendLine.getDirect() == 0) {
+					// 下线段离开中枢，直接pass
 					buyf.setPrice(0);
 					return buyf;
 				}
 
 				TrendType beforeTrend = trendList.get(trendList.size() - 3);
 				Line beforeTrendLine = (Line) beforeTrend;
-				if (beforeTrendLine.getDirect() == 1) {
+				if (beforeTrendLine.getDirect() == 0) {
 					// 倒数第二个中枢连接是向上的，直接pass
 					buyf.setPrice(0);
 					return buyf;
 				}
 
-				// 此时的走势必然是 中枢 ---向下--->中枢---向下--->
+				// 此时的走势必然是 中枢 ---向上--->中枢---向上--->
 				// 计算连个中枢连接的信息，判断是否背驰
 
-				// 获取第一个中枢（中枢 ---向下--->中枢---向下---> 走势）
+				// 获取第一个中枢（中枢 ---向上--->中枢---向上---> 走势）
 				ZhongShu beforeTrendZS = (ZhongShu) trendList.get(trendList.size() - 4);
 
-				// 获取第二个中枢（中枢 ---向下--->中枢---向下---> 走势）
+				// 获取第二个中枢（中枢 ---向上--->中枢---向上---> 走势）
 				ZhongShu lastTrendSz = (ZhongShu) trendList.get(trendList.size() - 2);
 
-				double preDiff = beforeTrendLine.getStartPoint().getPrice() - beforeTrendLine.getEndPoint().getPrice()
-						- (beforeTrendLine.getStartPoint().getPrice() - beforeTrendZS.getDd());
+				double preDiff = beforeTrendLine.getEndPoint().getPrice()-beforeTrendLine.getStartPoint().getPrice() 
+						- (beforeTrendZS.getGg()-beforeTrendLine.getStartPoint().getPrice());
 
 				double afterDiff = Math
 						.abs(lastTrendLine.getStartPoint().getPrice() - lastTrendLine.getEndPoint().getPrice()
-								- (lastTrendLine.getStartPoint().getPrice() - lastTrendSz.getDd()));
+								- (lastTrendLine.getEndPoint().getPrice() - lastTrendSz.getGg()));
 
 				// 计算几个锚点
 				double price = beforeTrendLine.getStartPoint().getPrice();
@@ -370,13 +385,13 @@ public class StockTest2 {
 				buyf.setAfterZhongshu(lastTrendSz);
 
 				// 两次离开中枢的幅度要超过一个固定的数目
-				if (BeiChiUtils.isBeichi(beforeTrendZS, lastTrendSz, beforeTrendLine, lastTrendLine, list,
+				if (BeiChiUtils2.isBeichi(beforeTrendZS, lastTrendSz, beforeTrendLine, lastTrendLine, list,
 						preDiff / price, afterDiff / price, buyf, lines)) {
 					// 买入价格
 					double buyPrice = list.get(list.size() - 1).getHigh();
 
 					// System.out.println("过滤掉跌的买入---");
-					if (buyPrice > lastTrendLine.getEndPoint().getPrice()) {
+					if (buyPrice > lastTrendSz.getGg()) {
 
 						buyf.setPrice(buyPrice);
 

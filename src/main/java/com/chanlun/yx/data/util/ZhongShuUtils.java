@@ -427,12 +427,26 @@ public class ZhongShuUtils {
 		
 		Point p1 = new Point("1", 2, 1);
 		Point p2 = new Point("2", 1, 0);
+		
 		Point p3 = new Point("3", 3, 1);
 		Point p4 = new Point("4", 0.5, 0);
+		
 		Point p5 = new Point("5", 4, 1);
-		Point p6 = new Point("6", 0.3, 0);
-		Point p7 = new Point("7", 0.4, 1);
-		Point p8 = new Point("8", 0.35, 0);
+		Point p6 = new Point("6", 1, 0);
+		
+		Point p7 = new Point("7", 6, 1);
+		Point p8 = new Point("8", 5, 0);
+		
+		Point p9 = new Point("9", 6, 1);
+		Point p10 = new Point("10", 5, 0);
+		
+		Point p11 = new Point("11", 6, 1);
+		Point p12 = new Point("12", 5, 0);
+		
+		Point p13 = new Point("13", 6, 1);
+		Point p14 = new Point("14", 3, 0);
+		
+		Point p15 = new Point("15", 6, 1);
 		
 		List<Point> points = new ArrayList<Point>();
 		points.add(p1);
@@ -443,6 +457,13 @@ public class ZhongShuUtils {
 		points.add(p6);
 		points.add(p7);
 		points.add(p8);
+		points.add(p9);
+		points.add(p10);
+		points.add(p11);
+		points.add(p12);
+		points.add(p13);
+		points.add(p14);
+		points.add(p15);
 		List<TrendType> list = findZhongShu(points);
 		System.out.println(list);
 		
