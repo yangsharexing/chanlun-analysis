@@ -210,7 +210,7 @@ public class StockTest4 {
 	private static boolean risk(String code, List<HLDto> hlList, List<HistoryRecord> list, double buyPrice,
 			String buyTm, BuyFeatrue buyfeature, int j, HistoryRecord record, List<Point> lines, int pointNum,
 			int orgPointNum) {
-
+    
 		boolean flag = false;
 
 		// // 风险控制 持仓第一天出现就跌了两个点
