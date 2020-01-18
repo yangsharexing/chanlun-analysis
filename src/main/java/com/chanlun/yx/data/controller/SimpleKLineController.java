@@ -26,6 +26,7 @@ import com.chanlun.yx.data.service.MiDataService;
 import com.chanlun.yx.data.util.BiLineUtils;
 import com.chanlun.yx.data.util.KLineUtils;
 import com.chanlun.yx.data.util.LineUtils;
+import com.chanlun.yx.data.util.TechnicalIndexUtils;
 import com.chanlun.yx.redis.RedisUtils;
 
 @RestController
@@ -88,6 +89,23 @@ public class SimpleKLineController {
 		map.put("list4_1", list4_1);
 
 		return map;
+	}
+	
+	
+	@RequestMapping("/macd")
+	public Map<String, List> getMacd(String code) throws IllegalAccessException, InvocationTargetException {
+		
+		code = "day.java.sh.600283";
+		List<HistoryRecord> list = RedisUtils.fetchData(code);
+		TechnicalIndexUtils.computeMacd(list);
+		// System.out.println("原始k线" + list.size());
+		for(HistoryRecord record:list) {
+			
+			System.out.println(record.getTime()+": bar:"+record.getBar()+"   macd:"+record.getMacd()+"  dif:"+record.getDif());
+			
+		}
+		
+		return null;
 	}
 
 	@RequestMapping("/getMyData")
