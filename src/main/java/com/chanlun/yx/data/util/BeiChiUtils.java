@@ -283,5 +283,5 @@ public class BeiChiUtils {
 		System.out.println(SingleX5(3.218955448, 0.52, 0, 6, 7));
 		System.out.println(SingleX(0.1));
 	}
-
+	
 }

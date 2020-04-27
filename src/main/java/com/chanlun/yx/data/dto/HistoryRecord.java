@@ -32,6 +32,116 @@ public class HistoryRecord {
 
 	private double dea;
 	
+	private double abs_length;
+	
+	private double turn;
+	
+	private double upLineRate;
+	
+	private double downLineRate;
+	
+	private double priceCh;
+	
+	private double Ma5;
+	
+	private double Ma10;
+	
+	private double Ma20;
+	
+	private double Ma30;
+	
+	private double Ma60;
+	
+	private double liDu;
+	
+	public double getLiDu() {
+		return liDu;
+	}
+
+	public void setLiDu(double liDu) {
+		this.liDu = liDu;
+	}
+
+	public double getMa5() {
+		return Ma5;
+	}
+
+	public void setMa5(double ma5) {
+		Ma5 = ma5;
+	}
+
+	public double getMa10() {
+		return Ma10;
+	}
+
+	public void setMa10(double ma10) {
+		Ma10 = ma10;
+	}
+
+	public double getMa20() {
+		return Ma20;
+	}
+
+	public void setMa20(double ma20) {
+		Ma20 = ma20;
+	}
+
+	public double getMa30() {
+		return Ma30;
+	}
+
+	public void setMa30(double ma30) {
+		Ma30 = ma30;
+	}
+
+	public double getMa60() {
+		return Ma60;
+	}
+
+	public void setMa60(double ma60) {
+		Ma60 = ma60;
+	}
+
+	public double getPriceCh() {
+		return priceCh;
+	}
+
+	public void setPriceCh(double priceCh) {
+		this.priceCh = priceCh;
+	}
+
+	public double getUpLineRate() {
+		return upLineRate;
+	}
+
+	public void setUpLineRate(double upLineRate) {
+		this.upLineRate = upLineRate;
+	}
+
+	public double getDownLineRate() {
+		return downLineRate;
+	}
+
+	public void setDownLineRate(double downLineRate) {
+		this.downLineRate = downLineRate;
+	}
+
+	public double getTurn() {
+		return turn;
+	}
+
+	public void setTurn(double turn) {
+		this.turn = turn;
+	}
+
+	public double getAbs_length() {
+		return abs_length;
+	}
+
+	public void setAbs_length(double abs_length) {
+		this.abs_length = abs_length;
+	}
+
 	public double getEmaSamll() {
 		return emaSamll;
 	}

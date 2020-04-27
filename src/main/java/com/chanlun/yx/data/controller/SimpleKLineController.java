@@ -50,18 +50,98 @@ public class SimpleKLineController {
 		List<Point> point2 = LineUtils.bi2Line(point);
 		// System.out.println("线段点为" + point2.size());
 
-		List<String> list_0 = new ArrayList<String>();
-		List<Double> list_1 = new ArrayList<Double>();
-		for (HistoryRecord record : list) {
-			list_0.add(record.getEndTime());
-			list_1.add(record.getLow() / 2 + record.getHigh() / 2);
+		// 计算相对高低点
+		// 1、缠论简化k线过后顶分型与底分型构成的点集合为超短期走势
+		// 2、将所有的底合并 将所有的顶合并 提取出来组成 短期走势
+		// 3、将2中提取出来的在用类似2的处理方法提取出来组成中期走势
+		// 4、将3中提取出来的再用类似2的处理方法提取出来的组成长期走势
+		// 这里list2为简化过的K
+		List<Point> level_1 = new ArrayList<Point>();
+
+		for (int i = 3; i < list2.size(); i++) {
+
+			HistoryRecord a1 = list2.get(i - 2);
+			HistoryRecord a2 = list2.get(i - 1);
+			HistoryRecord a3 = list2.get(i);
+
+			Point fpoint = isFenXin(a1, a2, a3);
+			if (fpoint != null) {
+
+				level_1.add(fpoint);
+			}
 		}
 
+		List<String> list_0 = new ArrayList<String>();
+		List<Double> list_1 = new ArrayList<Double>();
+		List<Point> level_1_c = level_1.subList(level_1.size() - 200, level_1.size() - 1);
+		System.out.println(level_1_c.size());
+		for (Point point_ : level_1_c) {
+			list_0.add(point_.getTime());
+			list_1.add(point_.getPrice());
+		}
+
+		List<Point> level_2 = new ArrayList<Point>();
+		int start = 0;
+		while (start < level_1_c.size()) {
+			
+
+			if (start == level_1_c.size() - 2) {
+				level_2.add(level_1_c.get(level_1_c.size() - 2));
+				level_2.add(level_1_c.get(level_1_c.size() - 1));
+				break;
+			}
+
+			if (level_1_c.get(start).getType() == 1) {
+
+				for (int i = start + 2;; i = i + 2) {
+					if (i < level_1_c.size()) {
+						if (level_1_c.get(i).getPrice() >= level_1_c.get(start).getPrice()) {
+							// 还有更高顶点
+							start = start + 2;
+							continue;
+
+						} else {
+							// 顶点确认
+							if(level_1_c.get(start).getPrice()==18.35) {
+								System.out.println();
+							}
+							level_2.add(level_1_c.get(start));
+							start = start + 1;
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+
+			} else {
+				for (int i = start + 2;; i = i + 2) {
+
+					if (i < level_1_c.size()) {
+						if (level_1_c.get(i).getPrice() <= level_1_c.get(start).getPrice()) {
+							// 还有更低点
+							start = start + 2;
+							continue;
+
+						} else {
+							// 低点确认
+							level_2.add(level_1_c.get(start));
+							start = start + 1;
+							break;
+
+						}
+					} else {
+						break;
+					}
+
+				}
+			}
+		}
 		List<String> list2_0 = new ArrayList<String>();
 		List<Double> list2_1 = new ArrayList<Double>();
-		for (HistoryRecord record : list2) {
-			list2_0.add(record.getEndTime());
-			list2_1.add(record.getLow() / 2 + record.getHigh() / 2);
+		for (Point p2 : level_2) {
+			list2_0.add(p2.getTime());
+			list2_1.add(p2.getPrice());
 		}
 
 		List<String> list3_0 = new ArrayList<String>();
@@ -78,6 +158,21 @@ public class SimpleKLineController {
 			list4_1.add(p.getPrice());
 		}
 
+//	List<String> list_0 = new ArrayList<String>();
+//	List<Double> list_1 = new ArrayList<Double>();
+//	for (HistoryRecord record : list) {
+//		list_0.add(record.getEndTime());
+//		list_1.add(record.getLow() / 2 + record.getHigh() / 2);
+//	}
+
+//	List<String> list2_0 = new ArrayList<String>();
+//	List<Double> list2_1 = new ArrayList<Double>();for(
+//	HistoryRecord record:list2)
+//	{
+//		list2_0.add(record.getEndTime());
+//		list2_1.add(record.getLow() / 2 + record.getHigh() / 2);
+//	}
+
 		Map<String, List> map = new HashMap<String, List>();
 		map.put("list_0", list_0);
 		map.put("list_1", list_1);
@@ -90,21 +185,21 @@ public class SimpleKLineController {
 
 		return map;
 	}
-	
-	
+
 	@RequestMapping("/macd")
 	public Map<String, List> getMacd(String code) throws IllegalAccessException, InvocationTargetException {
-		
+
 		code = "day.java.sh.600283";
 		List<HistoryRecord> list = RedisUtils.fetchData(code);
 		TechnicalIndexUtils.computeMacd(list);
 		// System.out.println("原始k线" + list.size());
-		for(HistoryRecord record:list) {
-			
-			System.out.println(record.getTime()+": bar:"+record.getBar()+"   macd:"+record.getMacd()+"  dif:"+record.getDif());
-			
+		for (HistoryRecord record : list) {
+
+			System.out.println(record.getTime() + ": bar:" + record.getBar() + "   macd:" + record.getMacd() + "  dif:"
+					+ record.getDif());
+
 		}
-		
+
 		return null;
 	}
 
@@ -113,8 +208,6 @@ public class SimpleKLineController {
 
 		List<AllHistoryRecord> list = RedisUtils.fetchDayData(code);
 		// System.out.println("原始k线" + list.size());
-		
-		
 
 		List<VpYDto> vpList = VPUtils.vp(list);
 
@@ -133,7 +226,7 @@ public class SimpleKLineController {
 			list2_0.add(record.getTime());
 			list2_1.add(record.getY());
 		}
-		
+
 		List<String> list3_0 = new ArrayList<String>();
 		List<Double> list3_1 = new ArrayList<Double>();
 		for (AllHistoryRecord record : list) {
@@ -150,5 +243,28 @@ public class SimpleKLineController {
 		map.put("list3_1", list3_1);
 
 		return map;
+	}
+
+	public static Point isFenXin(HistoryRecord recordA, HistoryRecord recordB, HistoryRecord recordC) {
+		Point point = new Point();
+		if (recordB.getHigh() > recordA.getHigh() && recordB.getHigh() > recordC.getHigh()) {
+			// 顶
+			point.setPrice(recordB.getHigh());
+			point.setTime(recordB.getEndTime());
+			point.setType(1);
+			return point;
+
+		}
+
+		if (recordB.getLow() < recordA.getLow() && recordB.getLow() < recordC.getLow()) {
+			// 底
+			point.setPrice(recordB.getLow());
+			point.setTime(recordB.getEndTime());
+			point.setType(0);
+			return point;
+		}
+
+		return null;
+
 	}
 }

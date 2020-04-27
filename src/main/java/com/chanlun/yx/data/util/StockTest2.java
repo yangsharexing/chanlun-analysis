@@ -68,7 +68,7 @@ public class StockTest2 {
 
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>();
 		List<HistoryRecord> afterlist = new ArrayList<HistoryRecord>();
-		if (historyList.size() < 50) {
+		if (historyList.size() < 500) {
 			// k线不足500根不做处理
 			return 0;
 		}
@@ -100,8 +100,8 @@ public class StockTest2 {
 			// 寻找买点
 			if (flag) {
 				List<HistoryRecord> simpleKLines = KLineUtils.handleKLine(list);
-				List<Point> lines = BiLineUtils.contructBiLines(simpleKLines);
-				// List<Point> lines = LineUtils.bi2Line(biLines);
+				List<Point> biLines = BiLineUtils.contructBiLines(simpleKLines);
+				List<Point> lines = LineUtils.bi2Line(biLines);
 				List<TrendType> trendList = ZhongShuUtils.findZhongShu(lines);
 
 				// 买入

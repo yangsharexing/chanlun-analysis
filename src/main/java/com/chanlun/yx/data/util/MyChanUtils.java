@@ -1,5 +1,6 @@
 package com.chanlun.yx.data.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import com.chanlun.yx.data.dto.ZhongShu;
 public class MyChanUtils {
 
 	public static void struck(List<Point> points) {
+		
+		List<ZhongShu> zhognshuList = new ArrayList<ZhongShu>();
 
 		ZhongShu currentZhongshu = new ZhongShu();
 		int startIndex = -1;
@@ -21,16 +24,10 @@ public class MyChanUtils {
 				startIndex = i + 3;
 				break;
 			}
-
 		}
-
 		if (currentZhongshu == null) {
 			return;
 		}
-		
-		
-		
-
 		int index = startIndex + 1;
 		while (index < points.size()) {
 

@@ -5,10 +5,11 @@ import java.util.concurrent.Callable;
 
 import com.chanlun.yx.data.dto.HLDto;
 import com.chanlun.yx.data.dto.HistoryRecord;
-import com.chanlun.yx.data.util.StockTest4;
+import com.chanlun.yx.data.util.FindStockTest;
+import com.chanlun.yx.data.util.StockTest2;
 import com.chanlun.yx.redis.RedisUtils;
 
-public class TestJob4 implements Callable<Object> {
+public class FindStockJob implements Callable<Object> {
 
 	private List<String> codes;
 	private List<HLDto> hlList;
@@ -16,22 +17,15 @@ public class TestJob4 implements Callable<Object> {
 
 	@Override
 	public Object call() throws Exception {
-		int i = 0;
 		for (String code : codes) {
-			i++;
-			System.out.println(Thread.currentThread().getName()+"开始了第： "+i+"   总共："+codes.size());
-			
 //			System.out.println("-----------------------"+code);
 			List<HistoryRecord> list = RedisUtils.fetchData(code);
-			int index = 50; 
-			while (true) {
-//				index = StockTest4.test(code, list, index, hlList);
-				if (index == 0) {
-					break;
-				}
+			if (list == null) {
+				continue;
 			}
+			int index = 50;
+			FindStockTest.test(code, list, index, hlList);
 		}
-//		System.out.println("finish");
 		return 1;
 	}
 

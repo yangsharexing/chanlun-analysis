@@ -33,6 +33,9 @@ public class RedisUtils {
 			init();
 		}
 		String dataFrame = jedis.get(code);
+		if(dataFrame==null) {
+			return null;
+		}
 		return DataFrame2List.json2List(dataFrame);
 	}
 	

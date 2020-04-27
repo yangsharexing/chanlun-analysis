@@ -15,7 +15,6 @@ public class DataFrame2List {
 		JSONObject obj = JSONObject.parseObject(dataFrameStr);
 
 		HistoryRecord data = null;
-
 		JSONArray dataList = obj.getJSONArray("date");
 		JSONArray timeList = obj.getJSONArray("time");
 		JSONArray codeList = obj.getJSONArray("code");
@@ -24,32 +23,53 @@ public class DataFrame2List {
 		JSONArray lowList = obj.getJSONArray("low");
 		JSONArray closeList = obj.getJSONArray("close");
 		JSONArray volumeList = obj.getJSONArray("volume");
-  
+		JSONArray trunList = obj.getJSONArray("turn");
+		JSONArray pctChgList = obj.getJSONArray("pctChg");
+
 		List<HistoryRecord> list = new ArrayList<HistoryRecord>(dataList.size());
 		for (int i = 0; i < dataList.size(); i++) {
+
+			if (volumeList == null || volumeList.getDouble(i) == null) {
+				System.out.println();
+			}
+			if (volumeList.getDouble(i) == null || volumeList.getDouble(i) == 0) {
+				continue;
+			}
+
 			data = new HistoryRecord();
-			if(timeList == null || timeList.size()==0){
+			if (timeList == null || timeList.size() == 0) {
 				data.setTime(dataList.getString(i));
 				data.setStartTime(dataList.getString(i));
 				data.setEndTime(dataList.getString(i));
-			}else{
+			} else {
 				data.setTime(timeList.getString(i));
 				data.setStartTime(timeList.getString(i));
 				data.setEndTime(timeList.getString(i));
 			}
-			
-			
+
 			data.setCode(codeList.getString(i));
 			data.setOpen(openList.getDouble(i));
 			data.setHigh(highList.getDouble(i));
 			data.setLow(lowList.getDouble(i));
 			data.setClose(closeList.getDouble(i));
 			data.setVolume(volumeList.getDouble(i));
+
+			if (trunList != null && trunList.size() > 0) {
+				try {
+					data.setTurn(trunList.getDouble(i));
+				} catch (Exception e) {
+					System.out.println(trunList.get(i));
+					e.printStackTrace();
+				}
+
+			}
+
 			list.add(data);
 		}
+		handle(list);
 		return list;
 	}
-	
+
 	public static List<AllHistoryRecord> json2DayList(String dataFrameStr) {
 
 		JSONObject obj = JSONObject.parseObject(dataFrameStr);
@@ -85,6 +105,52 @@ public class DataFrame2List {
 		}
 		return list;
 	}
+	
+	private static void handle(List<HistoryRecord> list) {
+		// TODO Auto-generated method stub
+		for (HistoryRecord record : list) {
+			record.setAbs_length(Math.abs(record.getOpen() - record.getClose()));
+		}
 
+		for (HistoryRecord record : list) {
+
+			if (record.getOpen() > record.getClose()) {
+
+				record.setUpLineRate((record.getHigh() - record.getOpen()) / record.getOpen());
+				record.setDownLineRate((record.getClose() - record.getLow()) / record.getOpen());
+			} else {
+
+				record.setUpLineRate((record.getHigh() - record.getClose()) / record.getOpen());
+				record.setDownLineRate((record.getOpen() - record.getLow()) / record.getOpen());
+			}
+		}
+
+		for (int i = 1; i < list.size(); i++) {
+			list.get(i).setPriceCh(((list.get(i).getClose() - list.get(i - 1).getClose()) / list.get(i - 1).getClose())*100);
+			
+			if(list.get(i).getTurn() !=0) {
+				
+				
+				list.get(i).setLiDu(list.get(i).getPriceCh()/list.get(i).getTurn());
+				
+				
+				HistoryRecord record = list.get(i);
+				
+//				if(!(Math.abs(record.getPriceCh())>9 ||( Math.abs(record.getPriceCh())>4.5 && Math.abs(record.getPriceCh())<5.5) )){
+//					
+//					if(list.get(i).getLiDu()>20 ) {
+//						System.out.println(list.get(i).getTime());
+//						System.out.println(list.get(i).getPriceCh());
+//						System.out.println(list.get(i).getTurn());
+//						System.out.println(list.get(i).getCode());
+//						System.out.println("--------------------");
+//					}
+//				}
+				
+			}
+			
+		}
+
+	}
 
 }
